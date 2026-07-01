@@ -1,0 +1,426 @@
+version: "4.0"
+description: "Breaking change patterns for Rails 3.2 → 4.0 upgrade"
+
+upgrade_findings:
+  high_priority:
+    - name: "attr_accessible usage"
+      kind: "breaking"
+      pattern: "attr_accessible"
+      exclude: ""
+      search_paths:
+        - "app/models/"
+        - "lib/"
+      explanation: "Rails 4.0 replaces attr_accessible with Strong Parameters in controllers"
+      fix: "Create *_params methods in controllers using params.require(:model).permit(:attrs), then remove attr_accessible from models"
+      variable_name: "ATTR_ACCESSIBLE"
+
+    - name: "attr_protected usage"
+      kind: "breaking"
+      pattern: "attr_protected"
+      exclude: ""
+      search_paths:
+        - "app/models/"
+        - "lib/"
+      explanation: "Rails 4.0 replaces attr_protected with Strong Parameters in controllers"
+      fix: "Create *_params methods in controllers with explicit permit lists, then remove attr_protected from models"
+      variable_name: "ATTR_PROTECTED"
+
+    - name: "require strong_parameters"
+      kind: "breaking"
+      pattern: "require.*strong_parameters"
+      exclude: ""
+      search_paths:
+        - "app/"
+        - "lib/"
+        - "config/"
+      explanation: "The strong_parameters gem is built into Rails 4.0 — require calls will fail"
+      fix: "Remove require 'strong_parameters' calls entirely"
+      variable_name: "REQUIRE_STRONG_PARAMS"
+
+    - name: "Scope without lambda"
+      kind: "breaking"
+      pattern: "scope\\s+:\\w+\\s*,\\s*where"
+      exclude: ""
+      search_paths:
+        - "app/models/"
+      explanation: "Rails 4.0 requires all scopes to use a lambda"
+      fix: "Change scope :name, where(...) to scope :name, -> { where(...) }"
+      variable_name: "SCOPE_WITHOUT_LAMBDA"
+
+    - name: "default_scope without block"
+      kind: "breaking"
+      pattern: "default_scope\\s+(where|order|:order)"
+      exclude: ""
+      search_paths:
+        - "app/models/"
+      explanation: "Rails 4.0 requires default_scope to use a block"
+      fix: "Change default_scope where(...) to default_scope { where(...) }"
+      variable_name: "DEFAULT_SCOPE_WITHOUT_BLOCK"
+
+    - name: "Association :conditions option"
+      kind: "breaking"
+      pattern: "(has_many|has_one|belongs_to|has_and_belongs_to_many).*:?conditions(:|\\s*=>)"
+      exclude: ""
+      search_paths:
+        - "app/models/"
+      explanation: "Rails 4.0 removed :conditions from associations — use a lambda with where() instead"
+      fix: "Move conditions into a lambda: has_many :items, -> { where(active: true) }"
+      variable_name: "ASSOCIATION_CONDITIONS"
+
+    - name: "Association :order option"
+      kind: "breaking"
+      pattern: "(has_many|has_one|belongs_to|has_and_belongs_to_many).*[^_]:?order(:|\\s*=>)"
+      exclude: ""
+      search_paths:
+        - "app/models/"
+      explanation: "Rails 4.0 removed :order from associations — use a lambda with order() instead"
+      fix: "Move order into a lambda: has_many :items, -> { order('position ASC') }"
+      variable_name: "ASSOCIATION_ORDER"
+
+    - name: "Association :extend option"
+      kind: "breaking"
+      pattern: "(has_many|has_one|belongs_to|has_and_belongs_to_many).*:?extend(:|\\s*=>)"
+      exclude: ""
+      search_paths:
+        - "app/models/"
+      explanation: "Rails 4.0 removed :extend from associations — use extending() inside a lambda"
+      fix: "Move extend into a lambda: has_many :items, -> { extending SomeExtension }"
+      variable_name: "ASSOCIATION_EXTEND"
+
+    - name: "Association :uniq option"
+      kind: "breaking"
+      pattern: "(has_many|has_and_belongs_to_many).*:?uniq(:|\\s*=>)"
+      exclude: ""
+      search_paths:
+        - "app/models/"
+      explanation: "Rails 4.0 removed :uniq from associations — use a lambda with distinct"
+      fix: "Move uniq into a lambda: has_many :items, -> { distinct }, through: :joins"
+      variable_name: "ASSOCIATION_UNIQ"
+
+    - name: "Association :finder_sql option"
+      kind: "deprecation"
+      pattern: ":?finder_sql(:|\\s*=>)"
+      exclude: ""
+      search_paths:
+        - "app/models/"
+      explanation: "Rails 4.0 deprecated :finder_sql with no direct replacement"
+      fix: "Rewrite using standard associations with scopes or custom query methods"
+      variable_name: "FINDER_SQL"
+
+    - name: "Dynamic finders (find_all_by_*)"
+      kind: "deprecation"
+      pattern: "find_all_by_"
+      exclude: ""
+      search_paths:
+        - "app/"
+        - "lib/"
+      explanation: "Dynamic finders like find_all_by_* are deprecated in Rails 4.0 but continue to work because Rails 4.0 ships activerecord-deprecated_finders as a default dependency. The finders are actually removed in Rails 4.1, when the bridge gem is no longer bundled"
+      fix: "Two valid paths. (1) Defer: leave the calls in place for the 3.2 → 4.0 hop and rely on the bundled activerecord-deprecated_finders gem; rewrite at the 4.0 → 4.1 hop where the gem is no longer default. (2) Pre-bump cleanup: replace find_all_by_column(val) with where(column: val) — works on Rails 3.2 and 4.0+. Note the return-type shift: find_all_by_* returned an Array; where(...) returns an ActiveRecord::Relation. If downstream code uses Array-specific methods (.flatten, indexed access, Array#-), add .to_a"
+      variable_name: "FIND_ALL_BY"
+
+    - name: "Dynamic finders (find_or_create_by_*)"
+      kind: "deprecation"
+      pattern: "find_or_create_by_"
+      exclude: ""
+      search_paths:
+        - "app/"
+        - "lib/"
+      explanation: "Dynamic finders like find_or_create_by_* are deprecated in Rails 4.0 but continue to work because Rails 4.0 ships activerecord-deprecated_finders as a default dependency. The finders are actually removed in Rails 4.1, when the bridge gem is no longer bundled"
+      fix: "Two valid paths. (1) Defer: leave the calls in place for the 3.2 → 4.0 hop and rely on the bundled activerecord-deprecated_finders gem; rewrite at the 4.0 → 4.1 hop. (2) Pre-bump cleanup: replace find_or_create_by_column(val) with find_or_create_by(column: val). Both forms work on Rails 3.2 and 4.0+, so the rewrite is backwards-compatible"
+      variable_name: "FIND_OR_CREATE_BY"
+
+    - name: "Dynamic finders (find_or_initialize_by_*)"
+      kind: "deprecation"
+      pattern: "find_or_initialize_by_"
+      exclude: ""
+      search_paths:
+        - "app/"
+        - "lib/"
+      explanation: "Dynamic finders like find_or_initialize_by_* are deprecated in Rails 4.0 but continue to work because Rails 4.0 ships activerecord-deprecated_finders as a default dependency. The finders are actually removed in Rails 4.1, when the bridge gem is no longer bundled"
+      fix: "Two valid paths. (1) Defer: leave the calls in place for the 3.2 → 4.0 hop and rely on the bundled activerecord-deprecated_finders gem; rewrite at the 4.0 → 4.1 hop. (2) Pre-bump cleanup: replace find_or_initialize_by_column(val) with find_or_initialize_by(column: val). Both forms work on Rails 3.2 and 4.0+, so the rewrite is backwards-compatible"
+      variable_name: "FIND_OR_INITIALIZE_BY"
+
+    - name: "Dynamic finders (find_last_by_*)"
+      kind: "deprecation"
+      pattern: "find_last_by_"
+      exclude: ""
+      search_paths:
+        - "app/"
+        - "lib/"
+      explanation: "Dynamic finders like find_last_by_* are deprecated in Rails 4.0 but continue to work because Rails 4.0 ships activerecord-deprecated_finders as a default dependency. The finders are actually removed in Rails 4.1, when the bridge gem is no longer bundled"
+      fix: "Two valid paths. (1) Defer: leave the calls in place for the 3.2 → 4.0 hop and rely on the bundled activerecord-deprecated_finders gem; rewrite at the 4.0 → 4.1 hop. (2) Pre-bump cleanup: replace find_last_by_column(val) with where(column: val).last. Both forms work on Rails 3.2 and 4.0+, so the rewrite is backwards-compatible"
+      variable_name: "FIND_LAST_BY"
+
+    - name: "Association :readonly option on through"
+      kind: "breaking"
+      pattern: "(has_many|has_and_belongs_to_many).*:?readonly(:|\\s*=>)"
+      exclude: ""
+      search_paths:
+        - "app/models/"
+      explanation: "Rails 4.0 removed :readonly from has_many :through associations"
+      fix: "Remove the readonly option — it is no longer supported"
+      variable_name: "ASSOCIATION_READONLY"
+
+    - name: "Ruby 1.8 version requirement"
+      kind: "breaking"
+      pattern: "ruby.*['\"]1\\.8"
+      exclude: ""
+      search_paths:
+        - "Gemfile"
+        - ".ruby-version"
+      explanation: "Rails 4.0 requires Ruby 1.9.3+ (2.0+ recommended) — it will not boot on Ruby 1.8"
+      fix: "Upgrade Ruby to 1.9.3+ (2.1+ recommended)"
+      variable_name: "RUBY_VERSION"
+
+    - name: "Route match without HTTP method"
+      kind: "breaking"
+      pattern: "^\\s*match\\s+['\"/]"
+      exclude: "via:"
+      search_paths:
+        - "config/routes.rb"
+        - "config/routes/"
+      explanation: "Rails 4.0 requires match routes to specify an HTTP method via: option. Rails 3.2's bare match accepted all verbs, so any non-GET request (POST/PUT/PATCH/DELETE) currently served by a matchless match route will silently 404 if the fix narrows the verb list. Also note: on Rails 3.2 `via: :all` is treated as literal HTTP method name `\"ALL\"` and 404s every request — the any-verb special-casing only exists on Rails 4+. Verified on Rails 3.2.22.5 with Rack::MockRequest"
+      fix: "Default to the behavior-preserving explicit verb list: `via: [:get, :post, :put, :patch, :delete]`. Works identically on Rails 3.2 and 4.0+, zero behavior delta from the matchless-match default. Only narrow to `via: :get` (or another single verb) after a per-route audit confirms the route is GET-only — otherwise POST/PUT/etc. silently 404 after the rewrite, and the regression often first surfaces in production because spec suites rarely cover every verb on every route. NEVER emit `via: :all` — on Rails 3.2 it 404s every request. Verb-tightening is a separate workstream from the upgrade rewrite"
+      variable_name: "MATCH_WITHOUT_VIA"
+
+    - name: "config.whiny_nils"
+      kind: "breaking"
+      pattern: "config\\.whiny_nils"
+      exclude: ""
+      search_paths:
+        - "config/"
+      explanation: "config.whiny_nils was a Rails 2.x/3.x debugging affordance that made calls on nil raise a more helpful NoMethodError. Removed in Rails 4.0 — setting it raises NoMethodError on app boot"
+      fix: "Delete the config.whiny_nils = true line entirely. No replacement — Ruby's own nil-method errors are sufficient. False-positive watch: matches in comments documenting the removal; verify the hit is an actual assignment, not a comment"
+      variable_name: "WHINY_NILS"
+
+  medium_priority:
+    - name: "rescue_action method"
+      kind: "breaking"
+      pattern: "def rescue_action"
+      exclude: ""
+      search_paths:
+        - "app/controllers/"
+        - "lib/"
+      explanation: "rescue_action was removed in Rails 4.0 with no deprecation warning"
+      fix: "Replace with rescue_from ExceptionClass do |e| ... end"
+      variable_name: "RESCUE_ACTION"
+
+    - name: "ActiveRecord Observers"
+      kind: "breaking"
+      pattern: "ActiveRecord::Observer|observer.*:.*\\w+_observer|config\\.active_record\\.observers"
+      exclude: ""
+      search_paths:
+        - "app/"
+        - "config/"
+      explanation: "ActiveRecord Observers were extracted from Rails 4.0"
+      fix: "Add gem 'rails-observers' to Gemfile"
+      variable_name: "OBSERVERS"
+
+    - name: "ActionController Sweepers"
+      kind: "breaking"
+      pattern: "cache_sweeper|ActionController::Caching::Sweeper|< ActionController::Caching::Sweeper"
+      exclude: ""
+      search_paths:
+        - "app/"
+      explanation: "Sweepers were extracted from Rails 4.0"
+      fix: "Add gem 'rails-observers' to Gemfile (includes sweepers)"
+      variable_name: "SWEEPERS"
+
+    - name: "Action caching (caches_page/caches_action)"
+      kind: "breaking"
+      pattern: "caches_page|caches_action"
+      exclude: ""
+      search_paths:
+        - "app/controllers/"
+      explanation: "Page and action caching were extracted from Rails 4.0"
+      fix: "Add gem 'actionpack-action_caching' to Gemfile"
+      variable_name: "ACTION_CACHING"
+
+    - name: "ActiveResource usage"
+      kind: "breaking"
+      pattern: "ActiveResource|< ActiveResource::Base"
+      exclude: ""
+      search_paths:
+        - "app/"
+        - "lib/"
+      explanation: "ActiveResource was extracted from Rails 4.0"
+      fix: "Add gem 'activeresource' to Gemfile"
+      variable_name: "ACTIVE_RESOURCE"
+
+    - name: "vendor/plugins directory"
+      kind: "breaking"
+      pattern: ""
+      exclude: ""
+      search_paths:
+        - "vendor/plugins/"
+      explanation: "Rails 4.0 dropped support for vendor/plugins"
+      fix: "Move plugin code to lib/ or convert to a gem"
+      variable_name: "VENDOR_PLUGINS"
+
+    - name: "cache_timestamp_format or external cache_key storage"
+      kind: "breaking"
+      pattern: "cache_timestamp_format|cache_key"
+      exclude: ""
+      search_paths:
+        - "app/models/"
+        - "config/"
+      explanation: "Rails 4.0 changed cache_timestamp_format from :number to :nsec — stored cache keys may no longer match"
+      fix: "Invalidate stored cache keys after upgrading, or set self.cache_timestamp_format = :number to preserve old format"
+      variable_name: "CACHE_KEY_FORMAT"
+
+    - name: "ActiveSupport::BufferedLogger"
+      kind: "deprecation"
+      pattern: "ActiveSupport::BufferedLogger"
+      exclude: ""
+      search_paths:
+        - "app/"
+        - "lib/"
+        - "config/"
+      explanation: "ActiveSupport::BufferedLogger was renamed to ActiveSupport::Logger in Rails 4.0"
+      fix: "Replace ActiveSupport::BufferedLogger with ActiveSupport::Logger"
+      variable_name: "BUFFERED_LOGGER"
+
+    - name: "config.assets.compress"
+      kind: "breaking"
+      pattern: "config\\.assets\\.compress"
+      exclude: ""
+      search_paths:
+        - "config/environments/"
+      explanation: "config.assets.compress was removed in Rails 4.0"
+      fix: "Replace with config.assets.js_compressor = :uglifier and config.assets.css_compressor = :sass"
+      variable_name: "ASSETS_COMPRESS"
+
+    - name: "config.paths[\"config/routes\"] (without .rb)"
+      kind: "breaking"
+      pattern: "config\\.paths\\[.config/routes.\\]"
+      exclude: "routes.rb"
+      search_paths:
+        - "config/"
+        - "lib/"
+      explanation: "Rails 4.0 changed the config-paths key from 'config/routes' to 'config/routes.rb'. On Rails 3.2 only the un-suffixed key is populated; renaming pre-bump returns nil for the old key and the next chained call raises NoMethodError: undefined method `concat' for nil:NilClass at boot. The claim that Rails 3.2.13+ silently accepts either form is false — only Rails 4+ accepts the .rb-suffixed key"
+      fix: "Do NOT rename in place pre-bump — that breaks Rails 3.2 boot. Branch with NextRails.next?: `key = NextRails.next? ? \"config/routes.rb\" : \"config/routes\"; config.paths[key].concat(...)` (or duplicate the block inside `if NextRails.next? ... else ... end`). Once the app is fully on Rails 4+, drop the branch"
+      variable_name: "CONFIG_ROUTES_PATH"
+
+    - name: "assign_attributes with options hash"
+      kind: "breaking"
+      pattern: "assign_attributes\\(.*,\\s*\\w+:"
+      exclude: ""
+      search_paths:
+        - "app/"
+        - "lib/"
+      explanation: "Rails 4.0 removed the options argument from assign_attributes. On Rails 3.2, assign_attributes(attrs, as: :admin) (or without_protection: true) invokes role-based mass-assignment tied to attr_accessible :foo, as: :admin. Dropping the options hash pre-bump silently changes mass-assignment scope on remaining 3.2 deploys and may permit attribute writes that the role-scoped attr_accessible declaration would otherwise filter — a silent security regression"
+      fix: "Do NOT bulk-drop the second arg pre-bump. Two safe paths: (1) branch the call with NextRails.next? — `if NextRails.next? then obj.assign_attributes(attrs) else obj.assign_attributes(attrs, as: :admin) end`; or (2) keep the option-hash form and rely on the protected_attributes bridge gem on the next side, which preserves role-scoped attr_accessible on Rails 4+. Pick (1) when the role scope is genuinely unused; pick (2) when role-based mass assignment is load-bearing"
+      variable_name: "ASSIGN_ATTRIBUTES_OPTIONS"
+
+    - name: "_run_validation_callbacks"
+      kind: "breaking"
+      pattern: "_run_validation_callbacks"
+      exclude: ""
+      search_paths:
+        - "app/"
+        - "lib/"
+      explanation: "Internal method _run_validation_callbacks was removed in Rails 4.0 with no deprecation warning"
+      fix: "Replace with run_callbacks(:validation) — the public API exists on Rails 3.2 (via ActiveModel::Validations::Callbacks / ActiveSupport::Callbacks) and 4.0+, so the swap is backwards-compatible. Real-world incidence is low — typically only ActiveModel form objects and edge-case validators hit this internal API"
+      variable_name: "RUN_VALIDATION_CALLBACKS"
+
+    - name: "select('distinct ...').pluck"
+      kind: "migration"
+      pattern: "select\\(.*distinct.*\\)\\.pluck"
+      exclude: ""
+      search_paths:
+        - "app/"
+        - "lib/"
+      explanation: "Rails 4.0 introduced .distinct as the preferred way to get distinct results"
+      fix: "Replace .select('distinct column').pluck(:column) with .distinct.pluck(:column)"
+      variable_name: "SELECT_DISTINCT_PLUCK"
+
+    - name: "ActiveRecord::ImmutableRelation risk"
+      kind: "breaking"
+      pattern: "\\.count\\(['\"]distinct"
+      exclude: ""
+      search_paths:
+        - "app/"
+        - "lib/"
+      explanation: "Rails 4.0 raises ActiveRecord::ImmutableRelation when calling count with a string on a loaded/modified relation"
+      fix: "Replace .count('distinct column') with .distinct.count"
+      variable_name: "IMMUTABLE_RELATION"
+
+    - name: "Fixture dynamic dates without string cast"
+      kind: "breaking"
+      pattern: "<%=.*\\.(ago|from_now|since|until).*%>"
+      exclude: "to_s"
+      search_paths:
+        - "spec/fixtures/"
+        - "test/fixtures/"
+      explanation: "Rails 4.0 is stricter about date parsing in YAML fixtures"
+      fix: "Cast dynamic dates to strings: <%= 3.days.ago.to_s(:db) %>"
+      variable_name: "FIXTURE_DATES"
+
+    - name: "update_all with hash/string/array conditions (two-arg form)"
+      kind: "deprecation"
+      pattern: "update_all\\([^)]*,\\s*[\\{\"'\\[]"
+      exclude: ""
+      search_paths:
+        - "app/"
+        - "lib/"
+        - "spec/"
+        - "test/"
+      explanation: "Class.update_all(set, conditions) two-arg form is deprecated in Rails 4.0 and removed in 4.1. The new form is Class.where(conditions).update_all(set). Covers hash, string, and array condition shapes. Note: activerecord-deprecated_finders does NOT bridge update_all — the bundled gem covers find(:first/:all/:last) and dynamic finders only, so this form must be rewritten before reaching Rails 4.1"
+      fix: "Lift the second arg into a where chain. Hash: Class.update_all(set, {col: v}) → Class.where(col: v).update_all(set). Array: Class.update_all(set, [\"x = ?\", v]) → Class.where(\"x = ?\", v).update_all(set). String: Class.update_all(set, \"x = 1\") → Class.where(\"x = 1\").update_all(set). Both forms work on Rails 3.2 so the rewrite is backwards-compatible. False-positive watch: single-arg update_all on a relation that already has a where chain is the modern form (no comma + brace/quote/bracket — should not match the regex); rare update_all(strings.join(\",\")) shapes can trigger on the inner comma-quote — verify the second token is an actual conditions arg"
+      variable_name: "UPDATE_ALL_TWO_ARG"
+
+    - name: "Old-style finder (find(:first|:all|:last, conditions:))"
+      kind: "deprecation"
+      pattern: "find\\(\\s*:(first|all|last)"
+      exclude: ""
+      search_paths:
+        - "app/"
+        - "lib/"
+        - "spec/"
+        - "test/"
+      explanation: "find(:first/:all/:last, conditions: ..., order: ..., ...) is the legacy ARel-1.0-style finder. Deprecated in Rails 3.2 (still works), removed in Rails 4.1. On Rails 4.0 it continues to work because activerecord-deprecated_finders ships as a default dependency — the gem is removed at 4.1, at which point the form must be rewritten"
+      fix: "Two valid paths. (1) Defer: leave the calls in place for the 3.2 → 4.0 hop and rely on the bundled activerecord-deprecated_finders gem; rewrite at the 4.0 → 4.1 hop. (2) Pre-bump cleanup: lift each hash key into a chained relation method. Class.find(:first, conditions: c) → Class.where(c).first; Class.find(:first, conditions: c, order: o) → Class.where(c).order(o).first; Class.find(:all, conditions: c) → Class.where(c); Class.find(:last, conditions: c) → Class.where(c).last. All recipes work on Rails 3.2 and 4.0+ natively. Important semantic shift for the :all form: find(:all, ...) returned an Array; where(...) returns an ActiveRecord::Relation. Most call sites just iterate, so the bare where(c) rewrite is fine; add .to_a only when downstream uses Array-specific methods. False-positive watch: Enumerable#find(ifnone) accepts a positional argument as the default if no block matches, so array.find(:all) / hash.find(:first) etc. would technically match — verify the receiver is an ActiveRecord class or relation (not a plain Array/Hash/Range). Also watch for Capybara page.find(..., match: :first) — different API, leave alone"
+      variable_name: "OLD_FINDER"
+
+  low_priority:
+    - name: "request.env.merge! in tests"
+      kind: "optional"
+      pattern: "request\\.env\\.merge!"
+      exclude: ""
+      search_paths:
+        - "spec/"
+        - "test/"
+      explanation: "Rails 4.0 added request.headers.merge! as the preferred test request-header API, but request.env.merge! continues to work in legacy ActionController::TestCase-style controller specs on every supported Rails version. The real forcing function is the Rails 5+ migration from ActionController::TestCase to ActionDispatch::IntegrationTest (the former was extracted to the rails-controller-testing gem in 5.1, still maintained). For a 3.2 → 4.0 hop, this is opt-in cleanup, not a required fix — no specific Rails version removes request.env.merge! outright"
+      fix: "Skippable for the 3.2 → 4.0 hop — request.env.merge! still works on Rails 4+. If opting in: on Rails 4+ it is a 1:1 substitution, request.env.merge!(headers) → request.headers.merge!(headers). Trap on Rails 3.2: ActionDispatch::Http::Headers#merge! exists but the Rack-key normalization layer Rails 4 added is absent, so Rack-env-style keys (HTTP_AUTHORIZATION, HTTP_*) silently fail to reach the controller — a real hop saw ~65% of auth-heavy controller examples fail because the auth header stopped propagating on 3.2. If rewriting during the dual-boot window, defer to the Rails 4+ side; do not bulk-rewrite pre-bump"
+      variable_name: "REQUEST_ENV_MERGE"
+
+dependencies:
+  protected_attributes:
+    check: false
+    gem_name: "protected_attributes"
+    message: "Temporary bridge gem for attr_accessible — migrate to Strong Parameters then remove"
+    url: "https://github.com/rails/protected_attributes"
+
+  rails_observers:
+    check: false
+    gem_name: "rails-observers"
+    message: "Required if using ActiveRecord Observers or Sweepers"
+    url: "https://github.com/rails/rails-observers"
+
+  activerecord_deprecated_finders:
+    check: false
+    gem_name: "activerecord-deprecated_finders"
+    message: "Temporary bridge gem for find_all_by_* — migrate to where/find_by then remove"
+    url: "https://github.com/rails/activerecord-deprecated_finders"
+
+  actionpack_action_caching:
+    check: false
+    gem_name: "actionpack-action_caching"
+    message: "Required if using caches_page or caches_action"
+    url: "https://github.com/rails/actionpack-action_caching"
+
+  activeresource:
+    check: false
+    gem_name: "activeresource"
+    message: "Required if using ActiveResource"
+    url: "https://github.com/rails/activeresource"

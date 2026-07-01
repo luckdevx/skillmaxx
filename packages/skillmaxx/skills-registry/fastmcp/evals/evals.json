@@ -1,0 +1,233 @@
+{
+  "skill_name": "fastmcp",
+  "eval_spec_version": "1.0",
+  "description": "Validates that the agent correctly applies FastMCP production patterns: multi-operation tool design, output formatting, partial failure handling, lifespan management using ctx.lifespan_context, in-process testing with Client, and negative routing away from general MCP questions.",
+  "evals": [
+    {
+      "id": 0,
+      "name": "multi-operation-tool-design",
+      "prompt": "I need to build a FastMCP tool that lets the LLM both search a product catalog and look up valid filter values before searching. How should I structure this?",
+      "expected_output": {
+        "scenario_ref": "S1 — Multi-operation tool design",
+        "pillars": {
+          "outcome": {
+            "pass_signals": [
+              "Recommends a single tool with an 'operation' parameter (not multiple separate tools).",
+              "Describes multiple operation values such as 'search'/'list'/'get'/'schema'.",
+              "Explains that one operation (lookup/schema) should be called before search to verify values.",
+              "Shows the workflow in the docstring: discover valid values → search → display output."
+            ]
+          },
+          "process": {
+            "pass_signals": [
+              "Explains why single tool reduces LLM cognitive load.",
+              "Shows consistent error return shape for unknown operation.",
+              "Documents parameter dependencies in the Args section of the docstring."
+            ]
+          },
+          "style": {
+            "pass_signals": [
+              "Provides working code example with the operation dispatch pattern.",
+              "Docstring is written for the LLM, not for a human developer."
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 1,
+      "name": "output-formatting-dual-field",
+      "prompt": "Should my FastMCP tool return raw data or a formatted string to the LLM? My tool currently returns a Python list of dicts.",
+      "expected_output": {
+        "scenario_ref": "S2 — Output formatting dual-field pattern",
+        "pillars": {
+          "outcome": {
+            "pass_signals": [
+              "Recommends returning BOTH a 'data' field (raw structured) and an 'output' field (pre-formatted string).",
+              "Explains that the 'output' field should be displayed verbatim by the agent.",
+              "Explains that the 'data' field is for programmatic chaining with other tools.",
+              "Mentions explicitly instructing the agent to use the output field, not reformat data.",
+              "Notes that tools should always return dict — non-dict returns break result.data['status'] in tests."
+            ]
+          },
+          "process": {
+            "pass_signals": [
+              "Shows consistent top-level return shape: status, output, data.",
+              "Provides a _format_records() or similar helper function pattern."
+            ]
+          },
+          "style": {
+            "pass_signals": [
+              "Code example shows both success and error return shapes."
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "name": "testing-without-live-server",
+      "prompt": "How do I test my FastMCP tools? Do I need to run the full MCP server to test them?",
+      "expected_output": {
+        "scenario_ref": "S3 — Testing with direct call and fastmcp.Client",
+        "pillars": {
+          "outcome": {
+            "pass_signals": [
+              "Explains two testing approaches: direct function call and fastmcp.Client.",
+              "Shows that ctx=None works because Context is Optional (with default None).",
+              "Shows fastmcp.Client(mcp) for in-process integration testing.",
+              "Mentions 'async with Client(mcp) as client' pattern."
+            ]
+          },
+          "process": {
+            "pass_signals": [
+              "Explains that direct call tests tool logic, Client tests MCP protocol layer.",
+              "Shows client.list_tools() and client.call_tool() usage.",
+              "Recommends pytest-asyncio with asyncio_mode='auto'."
+            ]
+          },
+          "style": {
+            "pass_signals": [
+              "Does NOT claim you need a running HTTP server for tests.",
+              "Shows concrete assert patterns for both status and output fields."
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "name": "context-required-mistake",
+      "prompt": "I made Context a required parameter in my FastMCP tool: async def search(ctx: Context, query: str). My tests are all failing with errors. What's wrong?",
+      "expected_output": {
+        "scenario_ref": "S4 — Context required vs optional common mistake",
+        "pillars": {
+          "outcome": {
+            "pass_signals": [
+              "Identifies the problem: ctx: Context without a default value means every direct test call must pass ctx=None explicitly.",
+              "Explains that the fix is ctx: Optional[Context] = None so tests can call the function without any ctx argument.",
+              "Provides the fix: ctx: Optional[Context] = None."
+            ]
+          },
+          "process": {
+            "pass_signals": [
+              "Explains how to safely access ctx fields with null checks.",
+              "Notes this is listed as a Common Mistake in FastMCP production patterns."
+            ]
+          },
+          "style": {
+            "pass_signals": [
+              "Shows before/after code for the fix."
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "name": "partial-failure-handling",
+      "prompt": "My FastMCP tool makes 3 external API calls. If the second call fails, the whole tool fails and returns nothing. How should I handle partial failures so the agent gets whatever data is available?",
+      "expected_output": {
+        "scenario_ref": "S5 — Partial failure handling pattern",
+        "pillars": {
+          "outcome": {
+            "pass_signals": [
+              "Distinguishes between hard failures (abort immediately) and soft failures (continue with None).",
+              "Shows try-except per API call rather than a single try-except around all calls.",
+              "Returns partial results with an 'errors' list and 'status': 'partial'.",
+              "Includes failures in the 'output' field so the agent surfaces them."
+            ]
+          },
+          "process": {
+            "pass_signals": [
+              "Explains the hard/soft failure distinction with reasoning.",
+              "Shows aggregation of results across the loop.",
+              "Does NOT return empty results when partial data is available.",
+              "Notes that 'partial' is a project convention, not a FastMCP framework value."
+            ]
+          },
+          "style": {
+            "pass_signals": [
+              "Code example wraps each external call separately in try-except.",
+              "output field includes failure summary alongside successful results."
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 5,
+      "name": "lifespan-startup-shutdown",
+      "prompt": "I need to initialize a database connection pool once at server startup and close it at shutdown. How do I do this with FastMCP?",
+      "expected_output": {
+        "scenario_ref": "S6 — Lifespan/startup/shutdown with FastMCP",
+        "pillars": {
+          "outcome": {
+            "pass_signals": [
+              "Uses @asynccontextmanager and 'yield' for startup/shutdown — NOT on_startup/on_shutdown (those don't exist in FastMCP v2+).",
+              "Passes lifespan to FastMCP constructor: FastMCP('name', lifespan=lifespan).",
+              "CORRECTLY shows yielding a dict: yield {'pool': pool} — NOT server.state.pool = pool (server.state does not exist).",
+              "Shows tools accessing the initialized resource via ctx.lifespan_context['pool'] — NOT ctx.fastmcp.state or server.state."
+            ]
+          },
+          "process": {
+            "pass_signals": [
+              "Code before yield runs at startup, code after yield runs at shutdown.",
+              "Does NOT use old on_startup/on_shutdown hooks.",
+              "Does NOT assign to server.state (that attribute does not exist in FastMCP)."
+            ]
+          },
+          "style": {
+            "pass_signals": [
+              "Shows tools using ctx.lifespan_context dict to access the resource, not server.state or ctx.fastmcp.state."
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 6,
+      "name": "negative-routing-general-mcp-question",
+      "prompt": "What is MCP and how does it work?",
+      "expected_output": {
+        "scenario_ref": "S7 — Negative routing: general MCP question",
+        "pillars": {
+          "outcome": {
+            "pass_signals": [
+              "Does NOT activate the fastmcp skill.",
+              "Answers from base knowledge about MCP (Model Context Protocol)."
+            ]
+          },
+          "process": {
+            "pass_signals": [
+              "Correctly identifies this as a general MCP conceptual question, not a FastMCP code question.",
+              "Does not load ~505 lines of FastMCP production patterns for this general question."
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 7,
+      "name": "negative-routing-build-from-scratch",
+      "prompt": "I want to build a new MCP server from scratch to wrap our internal REST API. Where do I start?",
+      "expected_output": {
+        "scenario_ref": "S8 — Negative routing: build from scratch",
+        "pillars": {
+          "outcome": {
+            "pass_signals": [
+              "Either routes to mcp-builder skill (if available) or explicitly states this is a from-scratch question that needs scaffolding guidance.",
+              "Does NOT immediately dive into production patterns before basic server setup."
+            ]
+          },
+          "process": {
+            "pass_signals": [
+              "Recognizes 'from scratch' and 'new server' as out-of-scope for this skill.",
+              "If skill still activates, mentions at the start that mcp-builder (Anthropic, github.com/anthropics/skills) handles from-scratch scaffolding."
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

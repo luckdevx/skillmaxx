@@ -1,0 +1,91 @@
+import { describe, it } from "node:test";
+import { ok, equal, deepEqual } from "node:assert/strict";
+import { mkdirSync } from "node:fs";
+import { join } from "node:path";
+import { detectAgents, AGENT_FOLDER_MAP } from "../lib.ts";
+import { useTmpDir } from "./helpers.ts";
+
+describe("detectAgents", () => {
+  const tmp = useTmpDir();
+
+  it("always includes universal as first entry", () => {
+    deepEqual(detectAgents(tmp.path), ["universal"]);
+  });
+
+  it("detects claude-code from .claude/skills", () => {
+    mkdirSync(join(tmp.path, ".claude", "skills"), { recursive: true });
+    const agents = detectAgents(tmp.path);
+    ok(agents.includes("universal"));
+    ok(agents.includes("claude-code"));
+  });
+
+  it("detects junie from .junie/skills", () => {
+    mkdirSync(join(tmp.path, ".junie", "skills"), { recursive: true });
+    ok(detectAgents(tmp.path).includes("junie"));
+  });
+
+  it("detects codebuddy from .codebuddy/skills", () => {
+    mkdirSync(join(tmp.path, ".codebuddy", "skills"), { recursive: true });
+    ok(detectAgents(tmp.path).includes("codebuddy"));
+  });
+
+  it("detects kiro-cli from .kiro/skills", () => {
+    mkdirSync(join(tmp.path, ".kiro", "skills"), { recursive: true });
+    ok(detectAgents(tmp.path).includes("kiro-cli"));
+  });
+
+  it("detects gemini-cli from .gemini/skills", () => {
+    mkdirSync(join(tmp.path, ".gemini", "skills"), { recursive: true });
+    ok(detectAgents(tmp.path).includes("gemini-cli"));
+  });
+
+  it("detects cursor from .cursor/skills", () => {
+    mkdirSync(join(tmp.path, ".cursor", "skills"), { recursive: true });
+    ok(detectAgents(tmp.path).includes("cursor"));
+  });
+
+  it("detects windsurf from .windsurf/skills", () => {
+    mkdirSync(join(tmp.path, ".windsurf", "skills"), { recursive: true });
+    ok(detectAgents(tmp.path).includes("windsurf"));
+  });
+
+  it("detects opencode from .opencode/skills", () => {
+    mkdirSync(join(tmp.path, ".opencode", "skills"), { recursive: true });
+    ok(detectAgents(tmp.path).includes("opencode"));
+  });
+
+  it("detects aider from .aider/skills", () => {
+    mkdirSync(join(tmp.path, ".aider", "skills"), { recursive: true });
+    ok(detectAgents(tmp.path).includes("aider"));
+  });
+
+  it("detects multiple agents", () => {
+    mkdirSync(join(tmp.path, ".claude", "skills"), { recursive: true });
+    mkdirSync(join(tmp.path, ".cline", "skills"), { recursive: true });
+    const agents = detectAgents(tmp.path);
+    equal(agents[0], "universal");
+    ok(agents.includes("claude-code"));
+    ok(agents.includes("cline"));
+    equal(agents.length, 3);
+  });
+
+  it("ignores agent folders without skills subdirectory", () => {
+    mkdirSync(join(tmp.path, ".claude"), { recursive: true });
+    mkdirSync(join(tmp.path, ".cursor"), { recursive: true });
+    deepEqual(detectAgents(tmp.path), ["universal"]);
+  });
+
+  it("ignores unknown folders with skills subdirectory", () => {
+    mkdirSync(join(tmp.path, ".unknown-editor", "skills"), { recursive: true });
+    deepEqual(detectAgents(tmp.path), ["universal"]);
+  });
+
+  it("detects all mapped agents when present", () => {
+    for (const folder of Object.keys(AGENT_FOLDER_MAP)) {
+      mkdirSync(join(tmp.path, folder, "skills"), { recursive: true });
+    }
+    const agents = detectAgents(tmp.path);
+    equal(agents[0], "universal");
+    equal(agents.length, 1 + Object.keys(AGENT_FOLDER_MAP).length);
+  });
+});
