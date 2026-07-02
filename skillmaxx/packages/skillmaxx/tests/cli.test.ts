@@ -35,13 +35,13 @@ describe("CLI", () => {
 
   it("shows version with --version", () => {
     const output = run(["--version"]);
-    ok(output.includes("0.5.2"));
+    ok(output.includes("0.5.3"));
     ok(output.includes("skillmaxx"));
   });
 
   it("shows version with -V", () => {
     const output = run(["-V"]);
-    ok(output.includes("0.5.2"));
+    ok(output.includes("0.5.3"));
   });
 
   it("clears the skillmaxx cache with --clear-cache", () => {

@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.3](https://github.com/luckdevx/skillmaxx/releases/tag/v0.5.3) (2026-07-02)
+
+### 🐛 Bug Fixes
+
+- fix: download external skills from their source repo instead of default registry [`a9cfbad`](https://github.com/luckdevx/skillmaxx/commit/a9cfbad)
+
 ## [0.5.2](https://github.com/luckdevx/skillmaxx/releases/tag/v0.5.2) (2026-07-02)
 
 ### 🐛 Bug Fixes
