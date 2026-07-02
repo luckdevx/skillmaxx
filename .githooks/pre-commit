@@ -2,6 +2,15 @@
 
 set -eu
 
+# Git runs this hook from the repository root, and `git diff --cached --name-only`
+# returns paths relative to that root. The project (package.json + oxfmt config)
+# lives under skillmaxx/, so resolve the repo root, keep only staged files under
+# skillmaxx/, strip that prefix, and run oxfmt from skillmaxx/. skills-registry/**
+# is excluded by skillmaxx/.prettierignore, so staged registry files are never
+# reformatted and their SHA-256 manifest hashes stay valid.
+
+root="$(git rev-parse --show-toplevel)"
+
 staged_paths="$(mktemp)"
 
 cleanup() {
@@ -10,12 +19,14 @@ cleanup() {
 
 trap cleanup EXIT
 
-git diff --cached --name-only -z --diff-filter=ACMR > "$staged_paths"
+git -C "$root" diff --cached --name-only --diff-filter=ACMR -- skillmaxx \
+  | sed 's|^skillmaxx/||' | tr '\n' '\0' > "$staged_paths"
 
 if [ ! -s "$staged_paths" ]; then
   exit 0
 fi
 
 echo "Formatting staged files..."
+cd "$root/skillmaxx"
 xargs -0 pnpm run fmt:staged -- < "$staged_paths"
 xargs -0 git add -- < "$staged_paths"

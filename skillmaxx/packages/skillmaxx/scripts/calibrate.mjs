@@ -4,7 +4,15 @@ import { detectTechnologies, collectSkills } from "../lib.ts";
 import { computeScore, WEIGHTS } from "../score.ts";
 
 const ELECTRO_PARTS_DIR = "/home/linux/proyectos/electro-parts";
-const RELEVANT_SOURCES = ["Bash", "Python", "Flask", "SQLAlchemy", "Pytest", "Docker", "GitHub Actions"];
+const RELEVANT_SOURCES = [
+  "Bash",
+  "Python",
+  "Flask",
+  "SQLAlchemy",
+  "Pytest",
+  "Docker",
+  "GitHub Actions",
+];
 
 function relevanceLevel(skill) {
   const hasRelevant = skill.sources.some((s) => RELEVANT_SOURCES.includes(s));
@@ -61,7 +69,10 @@ function run() {
 
   // Baseline
   const baseline = evaluateWeights();
-  if (!baseline) { console.error("  ✘ Could not evaluate"); return; }
+  if (!baseline) {
+    console.error("  ✘ Could not evaluate");
+    return;
+  }
 
   console.log(`\n  Baseline score: ${baseline.score.toFixed(4)}`);
   console.log("\n  Ranking:");
@@ -71,7 +82,9 @@ function run() {
     const icon = rel >= 2 ? "✓" : rel === 0 ? "✗" : "○";
     const techs = s.sources.filter((src) => RELEVANT_SOURCES.includes(src));
     const hint = techs.length > 0 ? techs.join(",") : s.sources.join(",");
-    console.log(`    ${String(i + 1).padStart(2)}. [${String(s.score).padStart(2)}%] ${icon} ${s.skill}  (${hint})`);
+    console.log(
+      `    ${String(i + 1).padStart(2)}. [${String(s.score).padStart(2)}%] ${icon} ${s.skill}  (${hint})`,
+    );
   }
 
   // Search: wider range, all individual adjustments of ±5pp to ±20pp
@@ -139,7 +152,9 @@ function run() {
     const ov = orig[k];
     const bv = bestWeights[k] ?? ov;
     const d = ((bv - ov) * 100).toFixed(0);
-    console.log(`    ${k.padEnd(14)} ${(bv * 100).toFixed(0)}%  (${d.startsWith("-") ? "" : "+"}${d}pp)`);
+    console.log(
+      `    ${k.padEnd(14)} ${(bv * 100).toFixed(0)}%  (${d.startsWith("-") ? "" : "+"}${d}pp)`,
+    );
   }
 
   // Show final ranking
@@ -153,7 +168,9 @@ function run() {
       const icon = rel >= 2 ? "✓" : rel === 0 ? "✗" : "○";
       const techs = s.sources.filter((src) => RELEVANT_SOURCES.includes(src));
       const hint = techs.length > 0 ? techs.join(",") : s.sources.join(",");
-      console.log(`    ${String(i + 1).padStart(2)}. [${String(s.score).padStart(2)}%] ${icon} ${s.skill}  (${hint})`);
+      console.log(
+        `    ${String(i + 1).padStart(2)}. [${String(s.score).padStart(2)}%] ${icon} ${s.skill}  (${hint})`,
+      );
     }
   }
   Object.assign(WEIGHTS, orig);

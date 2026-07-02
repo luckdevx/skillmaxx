@@ -11,11 +11,15 @@ export interface Scanner {
 
 function rg(pattern: string, dir: string): boolean {
   try {
-    const result = spawnSync("rg", ["-l", pattern, "--glob", "!node_modules", "--glob", "!.git", dir], {
-      encoding: "utf-8",
-      timeout: 10_000,
-      stdio: ["ignore", "pipe", "ignore"],
-    });
+    const result = spawnSync(
+      "rg",
+      ["-l", pattern, "--glob", "!node_modules", "--glob", "!.git", dir],
+      {
+        encoding: "utf-8",
+        timeout: 10_000,
+        stdio: ["ignore", "pipe", "ignore"],
+      },
+    );
     return (result.stdout ?? "").trim().length > 0;
   } catch {
     return false;
@@ -50,7 +54,13 @@ const dockerScanner: Scanner = {
   name: "docker",
   description: "Dockerfile and docker-compose",
   scan(dir: string): Technology[] {
-    const files = ["Dockerfile", "docker-compose.yml", "docker-compose.yaml", "compose.yaml", "Dockerfile.*"];
+    const files = [
+      "Dockerfile",
+      "docker-compose.yml",
+      "docker-compose.yaml",
+      "compose.yaml",
+      "Dockerfile.*",
+    ];
     for (const f of files) {
       if (f.includes("*")) {
         try {

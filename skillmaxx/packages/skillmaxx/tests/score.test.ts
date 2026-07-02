@@ -14,11 +14,7 @@ import {
 } from "../score.ts";
 import type { SkillEntry } from "../lib.ts";
 
-function makeEntry(
-  skill: string,
-  sources: string[],
-  installed = false,
-): SkillEntry {
+function makeEntry(skill: string, sources: string[], installed = false): SkillEntry {
   return { skill, sources, installed };
 }
 
@@ -83,7 +79,9 @@ describe("computeScore", () => {
   });
 
   it("cobertura dominates composite score", () => {
-    const twoSources = computeScore(makeEntry("vercel-labs/react-best-practices", ["React", "Next.js"]));
+    const twoSources = computeScore(
+      makeEntry("vercel-labs/react-best-practices", ["React", "Next.js"]),
+    );
     const oneSource = computeScore(makeEntry("vercel-labs/react-best-practices", ["React"]));
     ok(twoSources.score > oneSource.score);
   });
@@ -99,7 +97,11 @@ describe("dedupSkills", () => {
   it("returns same entries when no duplicates", () => {
     const skills: SkillEntry[] = [
       { skill: "vercel-labs/react-best-practices", sources: ["React"], installed: false },
-      { skill: "addyosmani/web-quality-skills/accessibility", sources: ["Frontend"], installed: false },
+      {
+        skill: "addyosmani/web-quality-skills/accessibility",
+        sources: ["Frontend"],
+        installed: false,
+      },
     ];
     const scored = skills.map(computeScore);
     const { entries, removed } = dedupSkills(scored);
@@ -147,7 +149,11 @@ describe("dedupSkillsV2", () => {
   it("does not dedup skills with different content", () => {
     const skills: SkillEntry[] = [
       { skill: "vercel-labs/react-best-practices", sources: ["React"], installed: false },
-      { skill: "addyosmani/web-quality-skills/accessibility", sources: ["Frontend"], installed: false },
+      {
+        skill: "addyosmani/web-quality-skills/accessibility",
+        sources: ["Frontend"],
+        installed: false,
+      },
     ];
     const regDir = makeRegistryDir("react-best-practices", "React hooks and patterns");
     const regDir2 = makeRegistryDir("accessibility", "Web accessibility guidelines");
@@ -164,7 +170,8 @@ describe("dedupSkillsV2", () => {
       { skill: "vercel-labs/react-best-practices", sources: ["React"], installed: false },
       { skill: "addyosmani/react-hooks-guide", sources: ["React"], installed: false },
     ];
-    const content = "React hooks are functions that let you use state and lifecycle features in functional components.";
+    const content =
+      "React hooks are functions that let you use state and lifecycle features in functional components.";
     const regDir = makeRegistryDir("react-best-practices", content);
     mkdirSync(join(regDir, "react-hooks-guide"), { recursive: true });
     writeFileSync(join(regDir, "react-hooks-guide", "SKILL.md"), content);
@@ -275,8 +282,16 @@ describe("SCORE_THRESHOLD", () => {
   it("filters skills below threshold", () => {
     const skills: SkillEntry[] = [
       { skill: "vercel-labs/react-best-practices", sources: ["React"], installed: false },
-      { skill: "pluginagentmarketplace/custom-plugin-python/pandas-data-analysis", sources: ["pandas"], installed: false },
-      { skill: "addyosmani/web-quality-skills/accessibility", sources: ["Frontend"], installed: false },
+      {
+        skill: "pluginagentmarketplace/custom-plugin-python/pandas-data-analysis",
+        sources: ["pandas"],
+        installed: false,
+      },
+      {
+        skill: "addyosmani/web-quality-skills/accessibility",
+        sources: ["Frontend"],
+        installed: false,
+      },
     ];
     const scored = skills.map(computeScore);
     const pruned = scored.filter((s) => s.score >= SCORE_THRESHOLD);

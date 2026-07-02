@@ -294,12 +294,7 @@ function getRepoPathCandidates(entry: RegistryEntry, skillName: string): string[
   if (entry.source === DEFAULT_REGISTRY_SOURCE || explicit !== skillName) return [explicit];
   const cached = _resolvedRepoPath.get(entry.bundleHash);
   if (cached) return [cached];
-  return [
-    skillName,
-    `skills/${skillName}`,
-    `tools/${skillName}`,
-    `plugins/${skillName}`,
-  ];
+  return [skillName, `skills/${skillName}`, `tools/${skillName}`, `plugins/${skillName}`];
 }
 
 async function resolveRepoPath(
@@ -314,7 +309,10 @@ async function resolveRepoPath(
   for (const baseUrl of getRegistryRawBaseUrls(entry, opts)) {
     for (const p of candidates) {
       const testUrl = `${baseUrl}/${encodeRawPath(p, "SKILL.md")}`;
-      const res = await fetchFile(testUrl, { method: "HEAD", headers: githubDownloadHeaders(testUrl) });
+      const res = await fetchFile(testUrl, {
+        method: "HEAD",
+        headers: githubDownloadHeaders(testUrl),
+      });
       if (res.ok) {
         commitRepoPath(entry, p);
         return p;
@@ -329,7 +327,9 @@ function commitRepoPath(entry: RegistryEntry, path: string): void {
 }
 
 function encodeRawPath(pathPrefix: string, rel: string): string {
-  return [pathPrefix, ...normalizeRegistryRelPath(rel).split("/")].map(encodeURIComponent).join("/");
+  return [pathPrefix, ...normalizeRegistryRelPath(rel).split("/")]
+    .map(encodeURIComponent)
+    .join("/");
 }
 
 function githubDownloadHeaders(url: string): HeadersInit {
@@ -380,7 +380,9 @@ async function downloadRegistryFile(
           );
         }
         errors.push(`${res.status} ${res.statusText} from ${baseUrl}/${pathPrefix}`);
-        opts.onTrace?.(`miss ${normalizedRel}: ${res.status} ${res.statusText} from ${baseUrl}/${pathPrefix}`);
+        opts.onTrace?.(
+          `miss ${normalizedRel}: ${res.status} ${res.statusText} from ${baseUrl}/${pathPrefix}`,
+        );
         continue;
       }
 

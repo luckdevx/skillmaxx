@@ -165,7 +165,10 @@ function printSkillsList(skills: ScoredSkillEntry[]): void {
     const num = String(i + 1).padStart(2, " ");
     const scoreTag = score < SCORE_THRESHOLD ? dim(`[${score}%]`) : dim(`[${score}%]`);
     const sourceSuffix = techSources.length > 0 ? `  ${dim(`← ${techSources.join(", ")}`)}` : "";
-    log(dim(`   ${num}.`) + ` ${scoreTag} ${styledLabel}${installedTag}${securityTag}${pad}${sourceSuffix}`);
+    log(
+      dim(`   ${num}.`) +
+        ` ${scoreTag} ${styledLabel}${installedTag}${securityTag}${pad}${sourceSuffix}`,
+    );
   }
   log();
 }
@@ -515,7 +518,10 @@ async function runAutoskills(flags: AutoskillsFlags, isRecommend: boolean): Prom
   const prunedSkills = scoredSkills.filter((s) => s.score >= SCORE_THRESHOLD);
   const filteredCount = scoredSkills.length - prunedSkills.length;
   const nameDedup = dedupSkills(prunedSkills);
-  const { entries: dedupedSkills, removed: dedupedCount } = dedupSkillsV2(nameDedup.entries, getRegistryDir());
+  const { entries: dedupedSkills, removed: dedupedCount } = dedupSkillsV2(
+    nameDedup.entries,
+    getRegistryDir(),
+  );
   const removedTotal = nameDedup.removed + dedupedCount;
   const resolvedAgents = agents.length > 0 ? agents : detectAgents();
 
@@ -524,7 +530,11 @@ async function runAutoskills(flags: AutoskillsFlags, isRecommend: boolean): Prom
       printSkillsList(dedupedSkills);
     }
     if (filteredCount > 0) {
-      log(dim(`   ${filteredCount} skill${filteredCount !== 1 ? "s" : ""} filtered (below ${SCORE_THRESHOLD}% quality threshold)`));
+      log(
+        dim(
+          `   ${filteredCount} skill${filteredCount !== 1 ? "s" : ""} filtered (below ${SCORE_THRESHOLD}% quality threshold)`,
+        ),
+      );
     }
     if (removedTotal > 0) {
       log(dim(`   ${removedTotal} duplicate${removedTotal !== 1 ? "s" : ""} removed`));
@@ -536,7 +546,11 @@ async function runAutoskills(flags: AutoskillsFlags, isRecommend: boolean): Prom
 
   if (dedupedSkills.length === 0) {
     if (filteredCount > 0) {
-      log(yellow(`   ⚠ All ${filteredCount} skill${filteredCount !== 1 ? "s" : ""} filtered (below ${SCORE_THRESHOLD}% quality threshold).`));
+      log(
+        yellow(
+          `   ⚠ All ${filteredCount} skill${filteredCount !== 1 ? "s" : ""} filtered (below ${SCORE_THRESHOLD}% quality threshold).`,
+        ),
+      );
     } else {
       log(yellow("   No skills available for your stack yet."));
     }
@@ -547,8 +561,10 @@ async function runAutoskills(flags: AutoskillsFlags, isRecommend: boolean): Prom
 
   if (filteredCount > 0 || removedTotal > 0) {
     const parts: string[] = [];
-    if (filteredCount > 0) parts.push(`${filteredCount} filtered (below ${SCORE_THRESHOLD}% threshold)`);
-    if (removedTotal > 0) parts.push(`${removedTotal} duplicate${removedTotal !== 1 ? "s" : ""} removed`);
+    if (filteredCount > 0)
+      parts.push(`${filteredCount} filtered (below ${SCORE_THRESHOLD}% threshold)`);
+    if (removedTotal > 0)
+      parts.push(`${removedTotal} duplicate${removedTotal !== 1 ? "s" : ""} removed`);
     log(dim(`   ${parts.join(", ")}.`));
     log();
   }
@@ -608,7 +624,11 @@ const cmd = new Command()
   .name("skillmaxx")
   .version(VERSION)
   .description("Auto-detect and install the best AI agent skills for your project")
-  .globalOption("-a, --agent <agent:string>", "Install for specific IDEs only (e.g. cursor, claude-code)", { collect: true })
+  .globalOption(
+    "-a, --agent <agent:string>",
+    "Install for specific IDEs only (e.g. cursor, claude-code)",
+    { collect: true },
+  )
   .globalOption("--deep-scan", "Deep scan via rg import analysis (slower, more thorough)")
   .globalOption("-v, --verbose", "Show install trace and error details")
   .globalOption("--clear-cache", "Clear downloaded skills cache")

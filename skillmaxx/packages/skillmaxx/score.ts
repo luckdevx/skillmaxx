@@ -5,33 +5,33 @@ import { securityCheckForSkillPath, getRepoInfo } from "./installer.ts";
 
 export const WEIGHTS = {
   COBERTURA: 0.44,
-  USO_REAL: 0.20,
+  USO_REAL: 0.2,
   FRESHNESS: 0.15,
   REPUTACION: 0.01,
-  TAMANO_SNR: 0.10,
+  TAMANO_SNR: 0.1,
   SEGURIDAD: 0.07,
   CALIDAD_LLM: 0.03,
 };
 
 const AUTHOR_REPUTATION: Record<string, number> = {
   "vercel-labs": 90,
-  "anthropics": 85,
-  "addyosmani": 80,
-  "hashicorp": 80,
-  "clerk": 75,
+  anthropics: 85,
+  addyosmani: 80,
+  hashicorp: 80,
+  clerk: 75,
   "tanstack-skills": 75,
-  "apollographql": 75,
-  "github": 75,
-  "instantdb": 70,
-  "jeffallan": 65,
-  "kevmoo": 60,
+  apollographql: 75,
+  github: 75,
+  instantdb: 70,
+  jeffallan: 65,
+  kevmoo: 60,
   "inferen-sh": 60,
-  "wshobson": 55,
-  "mindrally": 55,
-  "pproenca": 50,
+  wshobson: 55,
+  mindrally: 55,
+  pproenca: 50,
   "affaan-m": 50,
-  "madteacher": 50,
-  "pluginagentmarketplace": 30,
+  madteacher: 50,
+  pluginagentmarketplace: 30,
 };
 
 export const SCORE_THRESHOLD = 40;
@@ -106,7 +106,11 @@ export const DEDUP_SIMILARITY_THRESHOLD = 0.85;
 
 function charNGrams(text: string, n: number = 3): Set<string> {
   const grams = new Set<string>();
-  const cleaned = text.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+  const cleaned = text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
   for (let i = 0; i <= cleaned.length - n; i++) {
     grams.add(cleaned.slice(i, i + n));
   }
@@ -123,10 +127,7 @@ function jaccardSimilarity(a: Set<string>, b: Set<string>): number {
   return union === 0 ? 0 : intersection / union;
 }
 
-export function dedupSkillsV2(
-  entries: ScoredSkillEntry[],
-  registryDir?: string,
-): DedupResult {
+export function dedupSkillsV2(entries: ScoredSkillEntry[], registryDir?: string): DedupResult {
   if (!registryDir || entries.length <= 1) {
     return { entries, removed: 0 };
   }
@@ -206,12 +207,12 @@ export function computeScore(entry: SkillEntry): ScoredSkillEntry {
 
   const score = Math.round(
     cobertura * WEIGHTS.COBERTURA +
-    usoReal * WEIGHTS.USO_REAL +
-    freshness * WEIGHTS.FRESHNESS +
-    reputacion * WEIGHTS.REPUTACION +
-    tamanoSnr * WEIGHTS.TAMANO_SNR +
-    seguridad * WEIGHTS.SEGURIDAD +
-    calidadLlm * WEIGHTS.CALIDAD_LLM,
+      usoReal * WEIGHTS.USO_REAL +
+      freshness * WEIGHTS.FRESHNESS +
+      reputacion * WEIGHTS.REPUTACION +
+      tamanoSnr * WEIGHTS.TAMANO_SNR +
+      seguridad * WEIGHTS.SEGURIDAD +
+      calidadLlm * WEIGHTS.CALIDAD_LLM,
   );
 
   return {

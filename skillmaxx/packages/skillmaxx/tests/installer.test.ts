@@ -453,11 +453,7 @@ describe("installSkill", () => {
         onTrace: (message) => trace.push(message),
         fetchImpl: (async (url: string | URL | Request) => {
           const href = typeof url === "string" || url instanceof URL ? String(url) : url.url;
-          ok(
-            href.startsWith(
-              "https://raw.githubusercontent.com/owner/repo/deadbeef/raw-skill/",
-            ),
-          );
+          ok(href.startsWith("https://raw.githubusercontent.com/owner/repo/deadbeef/raw-skill/"));
           return fetchFromRegistry(regDir)(url);
         }) as typeof fetch,
       });
@@ -555,9 +551,7 @@ describe("installSkill", () => {
             return new Response("not found", { status: 404, statusText: "Not Found" });
           }
           if (href.includes("owner/repo/main/fallback-skill/")) {
-            const rel = decodeURIComponent(
-              href.split("owner/repo/main/")[1],
-            );
+            const rel = decodeURIComponent(href.split("owner/repo/main/")[1]);
             return new Response(readFileSync(join(regDir, rel)));
           }
           return fetchFromRegistry(regDir)(url);
@@ -567,9 +561,7 @@ describe("installSkill", () => {
       ok(result.success, result.output);
       ok(
         seenUrls.some((url) =>
-          url.startsWith(
-            "https://raw.githubusercontent.com/owner/repo/main/fallback-skill/",
-          ),
+          url.startsWith("https://raw.githubusercontent.com/owner/repo/main/fallback-skill/"),
         ),
       );
       equal(
