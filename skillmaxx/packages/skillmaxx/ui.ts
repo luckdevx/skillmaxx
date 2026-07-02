@@ -12,9 +12,9 @@ import {
 } from "./colors.ts";
 
 const LOGO_LINES = [
-  "┌─┐┬ ┬┌┬┐┌─┐┌─┐┬┌─┬┬  ┬  ┌─┐",
-  "├─┤│ │ │ │ │└─┐├┴┐││  │  └─┐",
-  "┴ ┴└─┘ ┴ └─┘└─┘┴ ┴┴┴─┘┴─┘└─┘",
+  "┌─┐┬┌─┬  ┬  ┌┬┐┌─┐╲ ╱╲ ╱",
+  "└─┐├┴┐│  │  │││├─┤ ╳  ╳ ",
+  "└─┘┴ ┴┴  ┴─┘┴ ┴┴ ┴╱ ╲╱ ╲",
 ];
 
 export function formatTime(ms: number): string {
@@ -53,7 +53,7 @@ function renderAnimatedLogo(frame: number, speed: number): string[] {
 
 export async function printBanner(version: string): Promise<void> {
   const ver = `v${version}`;
-  const subtitle = `Auto-install the best AI skills for your project · ${ver}`;
+  const subtitle = `skillmaxx · Max out your AI agent · ${ver}`;
 
   if (!process.stdout.isTTY || "NO_COLOR" in process.env) {
     log();
