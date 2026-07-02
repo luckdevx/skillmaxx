@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.1](https://github.com/luckdevx/skillmaxx/releases/tag/v0.5.1) (2026-07-02)
+
+### 🐛 Bug Fixes
+
+- fix: bundle @cliffy/command with esbuild so npx works without JSR support [`e74896d`](https://github.com/luckdevx/skillmaxx/commit/e74896d)
+
 ## [0.5.0](https://github.com/luckdevx/skillmaxx/releases/tag/v0.5.0) (2026-07-02)
 
 ### 🐛 Bug Fixes
