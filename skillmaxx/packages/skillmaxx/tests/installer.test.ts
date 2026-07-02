@@ -84,34 +84,26 @@ function fetchFromRegistry(regDir: string): typeof fetch {
   return (async (url: string | URL | Request) => {
     const href = typeof url === "string" || url instanceof URL ? String(url) : url.url;
     const pathname = new URL(href).pathname;
-    // Match both /skills-registry/<skillName>/<rel> and /{source}/{sha}/{skillName}/<rel>
     const skillMarker = "/skills-registry/";
-    let idx = pathname.indexOf(skillMarker);
-    if (idx === -1) {
-      // Try to extract skill name from path like /owner/repo/deadbeef/skillName/file
-      const parts = pathname.split("/");
-      // Pattern: /{user}/{repo}/{sha}/{skillName}/{rel...}
-      for (let i = 1; i < parts.length - 2; i++) {
-        if (parts[i] && parts[i + 1]) {
-          const potentialBase = parts.slice(1, i + 3).join("/");
-          const skillDir = join(regDir, parts[i + 2]);
-          if (existsSync(skillDir)) {
-            const rel = parts.slice(i + 3).join("/");
-            const filePath = join(regDir, parts[i + 2], rel);
-            if (existsSync(filePath)) {
-              return new Response(readFileSync(filePath));
-            }
-          }
-        }
+    const idx = pathname.indexOf(skillMarker);
+    if (idx !== -1) {
+      const relPath = pathname.slice(idx + skillMarker.length);
+      const filePath = join(regDir, ...relPath.split("/"));
+      if (existsSync(filePath)) return new Response(readFileSync(filePath));
+      return new Response("not found", { status: 404, statusText: "Not Found" });
+    }
+    // For raw GitHub URLs, find the skill name segment and resolve relative path
+    const parts = pathname.split("/");
+    for (let i = 1; i < parts.length - 1; i++) {
+      const skillDir = join(regDir, parts[i]);
+      if (existsSync(skillDir)) {
+        const rel = parts.slice(i + 1).join("/");
+        const filePath = join(regDir, parts[i], rel);
+        if (existsSync(filePath)) return new Response(readFileSync(filePath));
+        break; // found the dir but files don't match
       }
-      return new Response("not found", { status: 404, statusText: "Not Found" });
     }
-    const rel = decodeURIComponent(pathname.slice(idx + skillMarker.length));
-    const filePath = join(regDir, ...rel.split("/"));
-    if (!existsSync(filePath)) {
-      return new Response("not found", { status: 404, statusText: "Not Found" });
-    }
-    return new Response(readFileSync(filePath));
+    return new Response("not found", { status: 404, statusText: "Not Found" });
   }) as typeof fetch;
 }
 

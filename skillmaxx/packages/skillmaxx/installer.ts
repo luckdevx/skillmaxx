@@ -287,6 +287,20 @@ function getRepoPath(entry: RegistryEntry, skillName: string): string {
   return entry.repoPath ?? skillName;
 }
 
+const _resolvedRepoPath = new Map<string, string>();
+
+function getRepoPathCandidates(entry: RegistryEntry, skillName: string): string[] {
+  const explicit = getRepoPath(entry, skillName);
+  if (entry.source === DEFAULT_REGISTRY_SOURCE || explicit !== skillName) return [explicit];
+  const cached = _resolvedRepoPath.get(entry.bundleHash);
+  if (cached) return [cached];
+  return [skillName, `skills/${skillName}`];
+}
+
+function commitRepoPath(entry: RegistryEntry, path: string): void {
+  _resolvedRepoPath.set(entry.bundleHash, path);
+}
+
 function encodeRawPath(pathPrefix: string, rel: string): string {
   return [pathPrefix, ...normalizeRegistryRelPath(rel).split("/")].map(encodeURIComponent).join("/");
 }
@@ -321,37 +335,39 @@ async function downloadRegistryFile(
     throw new Error(`no recorded hash for ${normalizedRel}`);
   }
 
-  const pathPrefix = getRepoPath(entry, skillName);
   const fetchFile = opts.fetchImpl || fetch;
   const errors = [];
   for (const baseUrl of getRegistryRawBaseUrls(entry, opts)) {
-    const url = `${baseUrl}/${encodeRawPath(pathPrefix, normalizedRel)}`;
-    opts.onTrace?.(`GET ${url}`);
-    const res = await fetchFile(url, {
-      headers: githubDownloadHeaders(url),
-    });
-    if (!res.ok) {
-      const resetAt = Number(res.headers.get("x-ratelimit-reset") || 0) * 1000;
-      const resetSuffix = resetAt ? ` (resets ${new Date(resetAt).toISOString()})` : "";
-      if (res.status === 403 && res.headers.get("x-ratelimit-remaining") === "0") {
-        throw new Error(
-          `GitHub rate limit exceeded${resetSuffix}. Set GITHUB_TOKEN or GH_TOKEN to increase the limit.`,
-        );
+    for (const pathPrefix of getRepoPathCandidates(entry, skillName)) {
+      const url = `${baseUrl}/${encodeRawPath(pathPrefix, normalizedRel)}`;
+      opts.onTrace?.(`GET ${url}`);
+      const res = await fetchFile(url, {
+        headers: githubDownloadHeaders(url),
+      });
+      if (!res.ok) {
+        const resetAt = Number(res.headers.get("x-ratelimit-reset") || 0) * 1000;
+        const resetSuffix = resetAt ? ` (resets ${new Date(resetAt).toISOString()})` : "";
+        if (res.status === 403 && res.headers.get("x-ratelimit-remaining") === "0") {
+          throw new Error(
+            `GitHub rate limit exceeded${resetSuffix}. Set GITHUB_TOKEN or GH_TOKEN to increase the limit.`,
+          );
+        }
+        errors.push(`${res.status} ${res.statusText} from ${baseUrl}/${pathPrefix}`);
+        opts.onTrace?.(`miss ${normalizedRel}: ${res.status} ${res.statusText} from ${baseUrl}/${pathPrefix}`);
+        continue;
       }
-      errors.push(`${res.status} ${res.statusText} from ${baseUrl}`);
-      opts.onTrace?.(`miss ${normalizedRel}: ${res.status} ${res.statusText} from ${baseUrl}`);
-      continue;
-    }
 
-    const buf = Buffer.from(await res.arrayBuffer());
-    const actual = sha256Buffer(buf);
-    if (actual !== expected) {
-      errors.push(`hash mismatch from ${baseUrl}`);
-      opts.onTrace?.(`hash mismatch for ${normalizedRel} from ${baseUrl}`);
-      continue;
+      const buf = Buffer.from(await res.arrayBuffer());
+      const actual = sha256Buffer(buf);
+      if (actual !== expected) {
+        errors.push(`hash mismatch from ${baseUrl}/${pathPrefix}`);
+        opts.onTrace?.(`hash mismatch for ${normalizedRel} from ${baseUrl}/${pathPrefix}`);
+        continue;
+      }
+      commitRepoPath(entry, pathPrefix);
+      opts.onTrace?.(`downloaded ${normalizedRel} from ${url}`);
+      return { buf, url };
     }
-    opts.onTrace?.(`downloaded ${normalizedRel} from ${url}`);
-    return { buf, url };
   }
 
   throw new Error(`download failed for ${normalizedRel}: ${errors.join("; ")}`);

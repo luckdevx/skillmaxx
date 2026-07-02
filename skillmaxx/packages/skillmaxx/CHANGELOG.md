@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.5](https://github.com/luckdevx/skillmaxx/releases/tag/v0.5.5) (2026-07-02)
+
+### 🐛 Bug Fixes
+
+- fix: auto-detect repo path for nested external skills (skills/, tools/, plugins/) [`5aba273`](https://github.com/luckdevx/skillmaxx/commit/5aba273)
+
 ## [0.5.4](https://github.com/luckdevx/skillmaxx/releases/tag/v0.5.4) (2026-07-02)
 
 ### 🐛 Bug Fixes
