@@ -305,7 +305,7 @@ interface SummaryOptions {
     command: string;
   }[];
   elapsed: number;
-  verbose: boolean;
+  verbose?: boolean;
 }
 
 function printSummary({ installed, failed, errors, elapsed, verbose }: SummaryOptions): void {

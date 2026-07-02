@@ -131,6 +131,7 @@ export function dedupSkillsV2(
     return { entries, removed: 0 };
   }
 
+  const dir: string = registryDir;
   const contentCache = new Map<string, string>();
   const gramCache = new Map<string, Set<string>>();
 
@@ -139,7 +140,7 @@ export function dedupSkillsV2(
     if (content !== undefined) return content;
     const skillName = skill.split("/").pop() ?? skill;
     try {
-      content = readFileSync(join(registryDir, skillName, "SKILL.md"), "utf-8");
+      content = readFileSync(join(dir, skillName, "SKILL.md"), "utf-8");
     } catch {
       content = "";
     }
