@@ -48,7 +48,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:30:41.699Z"
-      }
+      },
+      "repoPath": "skills/deploy-to-vercel"
     },
     "next-best-practices": {
       "source": "vercel-labs/next-skills",
@@ -106,7 +107,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:30:42.349Z"
-      }
+      },
+      "repoPath": "skills/next-best-practices"
     },
     "next-cache-components": {
       "source": "vercel-labs/next-skills",
@@ -126,7 +128,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:30:42.350Z"
-      }
+      },
+      "repoPath": "skills/next-cache-components"
     },
     "next-upgrade": {
       "source": "vercel-labs/next-skills",
@@ -146,7 +149,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:30:42.350Z"
-      }
+      },
+      "repoPath": "skills/next-upgrade"
     },
     "vue-best-practices": {
       "source": "antfu/skills",
@@ -214,7 +218,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-18T05:11:24.447Z"
-      }
+      },
+      "repoPath": "skills/vue-best-practices"
     },
     "vue-debug-guides": {
       "source": "hyf0/vue-skills",
@@ -512,7 +517,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:30:43.487Z"
-      }
+      },
+      "repoPath": "skills/vue-debug-guides"
     },
     "vue": {
       "source": "antfu/skills",
@@ -540,7 +546,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:30:44.260Z"
-      }
+      },
+      "repoPath": "skills/vue"
     },
     "nuxt": {
       "source": "antfu/skills",
@@ -609,7 +616,8 @@
         "stars": 5461,
         "pushedAt": "2026-06-23T00:14:36Z",
         "sizeKB": 1348
-      }
+      },
+      "repoPath": "skills/nuxt"
     },
     "vite": {
       "source": "antfu/skills",
@@ -643,7 +651,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:30:44.273Z"
-      }
+      },
+      "repoPath": "skills/vite"
     },
     "vitest": {
       "source": "antfu/skills",
@@ -714,7 +723,8 @@
         "stars": 5461,
         "pushedAt": "2026-06-23T00:14:36Z",
         "sizeKB": 1348
-      }
+      },
+      "repoPath": "skills/vitest"
     },
     "vue-pinia-best-practices": {
       "source": "vuejs-ai/skills",
@@ -746,7 +756,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:30:45.009Z"
-      }
+      },
+      "repoPath": "skills/vue-pinia-best-practices"
     },
     "svelte5-best-practices": {
       "source": "ejirocodes/agent-skills",
@@ -780,7 +791,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:30:45.676Z"
-      }
+      },
+      "repoPath": "svelte/skills/svelte5-best-practices"
     },
     "svelte-code-writer": {
       "source": "sveltejs/ai-tools",
@@ -800,7 +812,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:30:46.540Z"
-      }
+      },
+      "repoPath": "tools/skills/svelte-code-writer"
     },
     "angular-developer": {
       "source": "angular/skills",
@@ -925,7 +938,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:31:06.011Z"
-      }
+      },
+      "repoPath": "skills/astro"
     },
     "tailwind-css-patterns": {
       "source": "giuseppe-trisciuoglio/developer-kit",
@@ -961,7 +975,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:31:10.375Z"
-      }
+      },
+      "repoPath": "plugins/developer-kit-typescript/skills/tailwind-css-patterns"
     },
     "shadcn": {
       "source": "shadcn/ui",
@@ -1015,7 +1030,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:25:31.687Z"
-      }
+      },
+      "repoPath": "skills/shadcn"
     },
     "typescript-advanced-types": {
       "source": "wshobson/agents",
@@ -1285,7 +1301,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:25:45.073Z"
-      }
+      },
+      "repoPath": "skills/supabase-postgres-best-practices"
     },
     "neon-postgres": {
       "source": "neondatabase/agent-skills",
@@ -1311,7 +1328,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:25:50.084Z"
-      }
+      },
+      "repoPath": "skills/neon-postgres"
     },
     "building-native-ui": {
       "source": "expo/skills",
@@ -1367,7 +1385,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:25:58.362Z"
-      }
+      },
+      "repoPath": "plugins/expo/skills/building-native-ui"
     },
     "native-data-fetching": {
       "source": "expo/skills",
@@ -1397,7 +1416,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:25:58.364Z"
-      }
+      },
+      "repoPath": "plugins/expo/skills/native-data-fetching"
     },
     "upgrading-expo": {
       "source": "expo/skills",
@@ -1439,7 +1459,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:25:58.367Z"
-      }
+      },
+      "repoPath": "plugins/expo/skills/upgrading-expo"
     },
     "expo-tailwind-setup": {
       "source": "expo/skills",
@@ -1467,7 +1488,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:25:58.368Z"
-      }
+      },
+      "repoPath": "plugins/expo/skills/expo-tailwind-setup"
     },
     "expo-dev-client": {
       "source": "expo/skills",
@@ -1495,7 +1517,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:25:58.370Z"
-      }
+      },
+      "repoPath": "plugins/expo/skills/expo-dev-client"
     },
     "expo-deployment": {
       "source": "expo/skills",
@@ -1533,7 +1556,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:25:58.373Z"
-      }
+      },
+      "repoPath": "plugins/expo/skills/expo-deployment"
     },
     "expo-cicd-workflows": {
       "source": "expo/skills",
@@ -1567,7 +1591,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:25:58.376Z"
-      }
+      },
+      "repoPath": "plugins/expo/skills/expo-cicd-workflows"
     },
     "expo-api-routes": {
       "source": "expo/skills",
@@ -1595,7 +1620,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:25:58.377Z"
-      }
+      },
+      "repoPath": "plugins/expo/skills/expo-api-routes"
     },
     "use-dom": {
       "source": "expo/skills",
@@ -1623,7 +1649,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:25:58.379Z"
-      }
+      },
+      "repoPath": "plugins/expo/skills/use-dom"
     },
     "flutter-expert": {
       "source": "jeffallan/claude-skills",
@@ -1655,7 +1682,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-30T08:52:05.677Z"
-      }
+      },
+      "repoPath": "skills/flutter-expert"
     },
     "php-pro": {
       "source": "jeffallan/claude-skills",
@@ -1688,7 +1716,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-30T08:55:09.262Z"
-      }
+      },
+      "repoPath": "skills/php-pro"
     },
     "laravel-specialist": {
       "source": "jeffallan/claude-skills",
@@ -1718,7 +1747,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-30T08:52:13.042Z"
-      }
+      },
+      "repoPath": "skills/laravel-specialist"
     },
     "pandas-pro": {
       "source": "jeffallan/claude-skills",
@@ -1748,7 +1778,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-30T08:52:15.714Z"
-      }
+      },
+      "repoPath": "skills/pandas-pro"
     },
     "flutter-animations": {
       "source": "madteacher/mad-agents-skills",
@@ -1873,7 +1904,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-24T21:31:55.747Z"
-      }
+      },
+      "repoPath": "skills/kotlin-tooling-cocoapods-spm-migration"
     },
     "kotlin-tooling-agp9-migration": {
       "source": "Kotlin/kotlin-agent-skills",
@@ -1911,7 +1943,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:31:31.218Z"
-      }
+      },
+      "repoPath": "skills/kotlin-tooling-agp9-migration"
     },
     "android-kotlin-core": {
       "source": "krutikJain/android-agent-skills",
@@ -1941,7 +1974,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:31:32.322Z"
-      }
+      },
+      "repoPath": "skills/android-kotlin-core"
     },
     "android-compose-foundations": {
       "source": "krutikJain/android-agent-skills",
@@ -1971,7 +2005,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:31:32.325Z"
-      }
+      },
+      "repoPath": "skills/android-compose-foundations"
     },
     "android-architecture-clean": {
       "source": "krutikJain/android-agent-skills",
@@ -2001,7 +2036,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:31:32.328Z"
-      }
+      },
+      "repoPath": "skills/android-architecture-clean"
     },
     "android-di-hilt": {
       "source": "krutikJain/android-agent-skills",
@@ -2031,7 +2067,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:31:32.331Z"
-      }
+      },
+      "repoPath": "skills/android-di-hilt"
     },
     "android-gradle-build-logic": {
       "source": "krutikJain/android-agent-skills",
@@ -2061,7 +2098,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:31:32.334Z"
-      }
+      },
+      "repoPath": "skills/android-gradle-build-logic"
     },
     "android-coroutines-flow": {
       "source": "krutikJain/android-agent-skills",
@@ -2091,7 +2129,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:31:32.337Z"
-      }
+      },
+      "repoPath": "skills/android-coroutines-flow"
     },
     "android-networking-retrofit-okhttp": {
       "source": "krutikJain/android-agent-skills",
@@ -2121,7 +2160,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:31:32.340Z"
-      }
+      },
+      "repoPath": "skills/android-networking-retrofit-okhttp"
     },
     "android-testing-unit": {
       "source": "krutikJain/android-agent-skills",
@@ -2151,7 +2191,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:31:32.343Z"
-      }
+      },
+      "repoPath": "skills/android-testing-unit"
     },
     "tanstack-start": {
       "source": "tanstack-skills/tanstack-skills",
@@ -2171,7 +2212,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T16:31:33.494Z"
-      }
+      },
+      "repoPath": "plugins/tanstack-start/skills/tanstack-start"
     },
     "chrome-extension-development": {
       "source": "mindrally/skills",
@@ -2263,7 +2305,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:26:22.181Z"
-      }
+      },
+      "repoPath": "skills/core/clerk"
     },
     "clerk-setup": {
       "source": "clerk/skills",
@@ -2291,7 +2334,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:26:22.182Z"
-      }
+      },
+      "repoPath": "skills/core/clerk-setup"
     },
     "clerk-custom-ui": {
       "source": "clerk/skills",
@@ -2321,7 +2365,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T22:41:39.202Z"
-      }
+      },
+      "repoPath": "skills/core/clerk-custom-ui"
     },
     "clerk-backend-api": {
       "source": "clerk/skills",
@@ -2357,7 +2402,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-30T08:55:10.605Z"
-      }
+      },
+      "repoPath": "skills/core/clerk-backend-api"
     },
     "clerk-orgs": {
       "source": "clerk/skills",
@@ -2393,7 +2439,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:26:22.186Z"
-      }
+      },
+      "repoPath": "skills/features/clerk-orgs"
     },
     "clerk-webhooks": {
       "source": "clerk/skills",
@@ -2423,7 +2470,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:26:22.188Z"
-      }
+      },
+      "repoPath": "skills/features/clerk-webhooks"
     },
     "clerk-testing": {
       "source": "clerk/skills",
@@ -2443,7 +2491,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T22:41:39.210Z"
-      }
+      },
+      "repoPath": "skills/features/clerk-testing"
     },
     "clerk-nextjs-patterns": {
       "source": "clerk/skills",
@@ -2491,7 +2540,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-02T01:26:22.191Z"
-      }
+      },
+      "repoPath": "skills/frameworks/clerk-nextjs-patterns"
     },
     "clerk-nuxt-patterns": {
       "source": "clerk/skills",
@@ -2527,7 +2577,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T22:41:39.216Z"
-      }
+      },
+      "repoPath": "skills/frameworks/clerk-nuxt-patterns"
     },
     "clerk-vue-patterns": {
       "source": "clerk/skills",
@@ -2567,7 +2618,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T22:41:39.219Z"
-      }
+      },
+      "repoPath": "skills/frameworks/clerk-vue-patterns"
     },
     "clerk-react-patterns": {
       "source": "clerk/skills",
@@ -2609,7 +2661,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T22:41:39.222Z"
-      }
+      },
+      "repoPath": "skills/frameworks/clerk-react-patterns"
     },
     "clerk-astro-patterns": {
       "source": "clerk/skills",
@@ -2653,7 +2706,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T22:41:39.225Z"
-      }
+      },
+      "repoPath": "skills/frameworks/clerk-astro-patterns"
     },
     "clerk-expo-patterns": {
       "source": "clerk/skills",
@@ -2697,7 +2751,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T22:41:39.228Z"
-      }
+      },
+      "repoPath": "skills/frameworks/clerk-expo-patterns"
     },
     "clerk-react-router-patterns": {
       "source": "clerk/skills",
@@ -2739,7 +2794,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T22:41:39.231Z"
-      }
+      },
+      "repoPath": "skills/frameworks/clerk-react-router-patterns"
     },
     "clerk-tanstack-patterns": {
       "source": "clerk/skills",
@@ -2783,7 +2839,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T22:41:39.234Z"
-      }
+      },
+      "repoPath": "skills/frameworks/clerk-tanstack-patterns"
     },
     "clerk-chrome-extension-patterns": {
       "source": "clerk/skills",
@@ -2823,7 +2880,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-30T08:55:13.097Z"
-      }
+      },
+      "repoPath": "skills/frameworks/clerk-chrome-extension-patterns"
     },
     "clerk-swift": {
       "source": "clerk/skills",
@@ -2847,7 +2905,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T22:41:39.238Z"
-      }
+      },
+      "repoPath": "skills/mobile/clerk-swift"
     },
     "clerk-android": {
       "source": "clerk/skills",
@@ -2871,7 +2930,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-17T22:41:39.240Z"
-      }
+      },
+      "repoPath": "skills/mobile/clerk-android"
     },
     "turborepo": {
       "source": "vercel/turborepo",
@@ -2952,7 +3012,8 @@
         "stars": 30627,
         "pushedAt": "2026-07-01T22:34:17Z",
         "sizeKB": 818436
-      }
+      },
+      "repoPath": "skills/turborepo"
     },
     "azure-deploy": {
       "source": "microsoft/github-copilot-for-azure",
@@ -3068,7 +3129,8 @@
         ],
         "summary": "Mostly legitimate Azure deployment guidance, but it includes destructive cleanup commands, repeated use of unsafe `eval $(azd env get-values)`, and instructions to retrieve/use ACR admin credentials that warrant human review.",
         "checkedAt": "2026-05-03T15:50:32.599Z"
-      }
+      },
+      "repoPath": "plugin/skills/azure-deploy"
     },
     "azure-ai": {
       "source": "microsoft/github-copilot-for-azure",
@@ -3120,7 +3182,8 @@
         "model": "gpt-5.4",
         "promptVersion": "1.0.0",
         "reviewedAt": "2026-04-24T21:18:21.334Z"
-      }
+      },
+      "repoPath": "plugin/skills/azure-ai"
     },
     "azure-diagnostics": {
       "source": "microsoft/github-copilot-for-azure",
@@ -3211,7 +3274,8 @@
         "stars": 226,
         "pushedAt": "2026-07-01T23:52:42Z",
         "sizeKB": 83964
-      }
+      },
+      "repoPath": "plugin/skills/azure-diagnostics"
     },
     "elevenlabs-tts": {
       "source": "inferen-sh/skills",
@@ -3242,7 +3306,8 @@
         "stars": 578,
         "pushedAt": "2026-06-09T06:25:47Z",
         "sizeKB": 638
-      }
+      },
+      "repoPath": "tools/audio/elevenlabs-tts"
     },
     "elevenlabs-music": {
       "source": "inferen-sh/skills",
@@ -3273,7 +3338,8 @@
         "stars": 578,
         "pushedAt": "2026-06-09T06:25:47Z",
         "sizeKB": 638
-      }
+      },
+      "repoPath": "tools/audio/elevenlabs-music"
     },
     "python-executor": {
       "source": "inferen-sh/skills",
@@ -3304,7 +3370,8 @@
         "stars": 578,
         "pushedAt": "2026-06-09T06:25:47Z",
         "sizeKB": 638
-      }
+      },
+      "repoPath": "tools/utilities/python-executor"
     },
     "cloudflare": {
       "source": "cloudflare/skills",
@@ -3973,7 +4040,8 @@
         "stars": 2022,
         "pushedAt": "2026-06-22T19:15:52Z",
         "sizeKB": 1151
-      }
+      },
+      "repoPath": "skills/cloudflare"
     },
     "wrangler": {
       "source": "cloudflare/skills",
@@ -14116,7 +14184,8 @@
         "findings": [],
         "summary": "review skipped (--no-review)",
         "checkedAt": "2026-07-01T22:25:21.454Z"
-      }
+      },
+      "repoPath": "skills/dockerfile-best-practices"
     },
     "docker-compose-patterns": {
       "source": "KentoShimizu/sw-agent-skills",
@@ -14153,7 +14222,8 @@
         "stars": 6,
         "pushedAt": "2026-03-11T07:41:16Z",
         "sizeKB": 887
-      }
+      },
+      "repoPath": "skills/docker-compose-patterns"
     },
     "github-actions-workflow-design": {
       "source": "KentoShimizu/sw-agent-skills",
@@ -14192,7 +14262,8 @@
         "stars": 6,
         "pushedAt": "2026-03-11T07:41:16Z",
         "sizeKB": 887
-      }
+      },
+      "repoPath": "skills/github-actions-workflow-design"
     },
     "github-fix-ci": {
       "source": "KentoShimizu/sw-agent-skills",
@@ -14229,7 +14300,8 @@
         "stars": 6,
         "pushedAt": "2026-03-11T07:41:16Z",
         "sizeKB": 887
-      }
+      },
+      "repoPath": "skills/github-fix-ci"
     },
     "fastmcp": {
       "source": "sharanharsoor/skills",

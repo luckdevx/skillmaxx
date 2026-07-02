@@ -294,7 +294,34 @@ function getRepoPathCandidates(entry: RegistryEntry, skillName: string): string[
   if (entry.source === DEFAULT_REGISTRY_SOURCE || explicit !== skillName) return [explicit];
   const cached = _resolvedRepoPath.get(entry.bundleHash);
   if (cached) return [cached];
-  return [skillName, `skills/${skillName}`];
+  return [
+    skillName,
+    `skills/${skillName}`,
+    `tools/${skillName}`,
+    `plugins/${skillName}`,
+  ];
+}
+
+async function resolveRepoPath(
+  entry: RegistryEntry,
+  skillName: string,
+  codes: string[],
+  opts: InstallOptions,
+): Promise<string | null> {
+  const candidates = getRepoPathCandidates(entry, skillName);
+  if (candidates.length === 1) return candidates[0];
+  const fetchFile = opts.fetchImpl || fetch;
+  for (const baseUrl of getRegistryRawBaseUrls(entry, opts)) {
+    for (const p of candidates) {
+      const testUrl = `${baseUrl}/${encodeRawPath(p, "SKILL.md")}`;
+      const res = await fetchFile(testUrl, { method: "HEAD", headers: githubDownloadHeaders(testUrl) });
+      if (res.ok) {
+        commitRepoPath(entry, p);
+        return p;
+      }
+    }
+  }
+  return null;
 }
 
 function commitRepoPath(entry: RegistryEntry, path: string): void {

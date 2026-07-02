@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.6](https://github.com/luckdevx/skillmaxx/releases/tag/v0.5.6) (2026-07-02)
+
+### 🐛 Bug Fixes
+
+- fix: add repoPath to 72 external registry entries for correct nested path resolution
+- fix: auto-detect repo path for nested external skills (skills/, tools/, plugins/)
+
 ## [0.5.5](https://github.com/luckdevx/skillmaxx/releases/tag/v0.5.5) (2026-07-02)
 
 ### 🐛 Bug Fixes
