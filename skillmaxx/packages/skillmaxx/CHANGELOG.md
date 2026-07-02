@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.2](https://github.com/luckdevx/skillmaxx/releases/tag/v0.5.2) (2026-07-02)
+
+### 🐛 Bug Fixes
+
+- fix: replace AUTOSKILLS ASCII logo with SKILLMAXX and fix X glyph [`a51af73`](https://github.com/luckdevx/skillmaxx/commit/a51af73)
+
 ## [0.5.1](https://github.com/luckdevx/skillmaxx/releases/tag/v0.5.1) (2026-07-02)
 
 ### 🐛 Bug Fixes
