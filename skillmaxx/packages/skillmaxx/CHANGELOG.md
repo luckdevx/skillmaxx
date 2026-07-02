@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.4](https://github.com/luckdevx/skillmaxx/releases/tag/v0.5.4) (2026-07-02)
+
+### 🐛 Bug Fixes
+
+- fix: download nested external skills using correct repo path [`653099e`](https://github.com/luckdevx/skillmaxx/commit/653099e)
+
 ## [0.5.3](https://github.com/luckdevx/skillmaxx/releases/tag/v0.5.3) (2026-07-02)
 
 ### 🐛 Bug Fixes

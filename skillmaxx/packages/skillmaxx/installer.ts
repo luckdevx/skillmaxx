@@ -28,6 +28,7 @@ const GITHUB_TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN || "";
 export interface RegistryEntry {
   source: string;
   skillPath: string;
+  repoPath?: string;
   commitSha: string;
   files: string[];
   sha256: Record<string, string>;
@@ -282,8 +283,12 @@ export function getRepoInfo(skillPath: string): RepoInfo | null {
   return entry.repoInfo;
 }
 
-function encodeRawPath(skillName: string, rel: string): string {
-  return [skillName, ...normalizeRegistryRelPath(rel).split("/")].map(encodeURIComponent).join("/");
+function getRepoPath(entry: RegistryEntry, skillName: string): string {
+  return entry.repoPath ?? skillName;
+}
+
+function encodeRawPath(pathPrefix: string, rel: string): string {
+  return [pathPrefix, ...normalizeRegistryRelPath(rel).split("/")].map(encodeURIComponent).join("/");
 }
 
 function githubDownloadHeaders(url: string): HeadersInit {
@@ -316,10 +321,11 @@ async function downloadRegistryFile(
     throw new Error(`no recorded hash for ${normalizedRel}`);
   }
 
+  const pathPrefix = getRepoPath(entry, skillName);
   const fetchFile = opts.fetchImpl || fetch;
   const errors = [];
   for (const baseUrl of getRegistryRawBaseUrls(entry, opts)) {
-    const url = `${baseUrl}/${encodeRawPath(skillName, normalizedRel)}`;
+    const url = `${baseUrl}/${encodeRawPath(pathPrefix, normalizedRel)}`;
     opts.onTrace?.(`GET ${url}`);
     const res = await fetchFile(url, {
       headers: githubDownloadHeaders(url),

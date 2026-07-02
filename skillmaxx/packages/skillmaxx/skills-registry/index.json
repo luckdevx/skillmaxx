@@ -1020,6 +1020,7 @@
     "typescript-advanced-types": {
       "source": "wshobson/agents",
       "skillPath": "wshobson/agents/typescript-advanced-types",
+      "repoPath": "plugins/javascript-typescript/skills/typescript-advanced-types",
       "commitSha": "5cc2549a50fc672230efd0a0307e2fd27ffba792",
       "files": [
         "SKILL.md",
@@ -1048,6 +1049,7 @@
     "terraform-module-library": {
       "source": "wshobson/agents",
       "skillPath": "wshobson/agents/terraform-module-library",
+      "repoPath": "plugins/cloud-infrastructure/skills/terraform-module-library",
       "commitSha": "87b81e9d642d7bb9602b33d1e2dadf1c2a619f2b",
       "files": [
         "SKILL.md",
@@ -1072,6 +1074,7 @@
     "nodejs-backend-patterns": {
       "source": "wshobson/agents",
       "skillPath": "wshobson/agents/nodejs-backend-patterns",
+      "repoPath": "plugins/javascript-typescript/skills/nodejs-backend-patterns",
       "commitSha": "5cc2549a50fc672230efd0a0307e2fd27ffba792",
       "files": [
         "SKILL.md",
@@ -1102,6 +1105,7 @@
     "python-testing-patterns": {
       "source": "wshobson/agents",
       "skillPath": "wshobson/agents/python-testing-patterns",
+      "repoPath": "plugins/python-development/skills/python-testing-patterns",
       "commitSha": "5cc2549a50fc672230efd0a0307e2fd27ffba792",
       "files": [
         "SKILL.md",
@@ -1132,6 +1136,7 @@
     "fastapi-templates": {
       "source": "wshobson/agents",
       "skillPath": "wshobson/agents/fastapi-templates",
+      "repoPath": "plugins/api-scaffolding/skills/fastapi-templates",
       "commitSha": "5cc2549a50fc672230efd0a0307e2fd27ffba792",
       "files": [
         "SKILL.md",
@@ -1160,6 +1165,7 @@
     "python-background-jobs": {
       "source": "wshobson/agents",
       "skillPath": "wshobson/agents/python-background-jobs",
+      "repoPath": "plugins/python-development/skills/python-background-jobs",
       "commitSha": "5cc2549a50fc672230efd0a0307e2fd27ffba792",
       "files": [
         "SKILL.md",
@@ -14002,6 +14008,7 @@
     "bash-defensive-patterns": {
       "source": "wshobson/agents",
       "skillPath": "wshobson/agents/bash-defensive-patterns",
+      "repoPath": "plugins/shell-scripting/skills/bash-defensive-patterns",
       "commitSha": "5cc2549a50fc672230efd0a0307e2fd27ffba792",
       "files": [
         "SKILL.md",
