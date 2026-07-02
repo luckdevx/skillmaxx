@@ -359,7 +359,7 @@ try {
   // 8. Build TypeScript
   console.log("\n🔨 Compilando TypeScript...");
   run("rm -rf dist");
-  runVisible("npx tsc");
+  runVisible("pnpm build");
 
   // 9. Publish to npm
   console.log("\n🚀 Publicando en npm...");
