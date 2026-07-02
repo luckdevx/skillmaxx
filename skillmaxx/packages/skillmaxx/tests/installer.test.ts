@@ -84,12 +84,29 @@ function fetchFromRegistry(regDir: string): typeof fetch {
   return (async (url: string | URL | Request) => {
     const href = typeof url === "string" || url instanceof URL ? String(url) : url.url;
     const pathname = new URL(href).pathname;
-    const marker = "/skills-registry/";
-    const idx = pathname.indexOf(marker);
+    // Match both /skills-registry/<skillName>/<rel> and /{source}/{sha}/{skillName}/<rel>
+    const skillMarker = "/skills-registry/";
+    let idx = pathname.indexOf(skillMarker);
     if (idx === -1) {
+      // Try to extract skill name from path like /owner/repo/deadbeef/skillName/file
+      const parts = pathname.split("/");
+      // Pattern: /{user}/{repo}/{sha}/{skillName}/{rel...}
+      for (let i = 1; i < parts.length - 2; i++) {
+        if (parts[i] && parts[i + 1]) {
+          const potentialBase = parts.slice(1, i + 3).join("/");
+          const skillDir = join(regDir, parts[i + 2]);
+          if (existsSync(skillDir)) {
+            const rel = parts.slice(i + 3).join("/");
+            const filePath = join(regDir, parts[i + 2], rel);
+            if (existsSync(filePath)) {
+              return new Response(readFileSync(filePath));
+            }
+          }
+        }
+      }
       return new Response("not found", { status: 404, statusText: "Not Found" });
     }
-    const rel = decodeURIComponent(pathname.slice(idx + marker.length));
+    const rel = decodeURIComponent(pathname.slice(idx + skillMarker.length));
     const filePath = join(regDir, ...rel.split("/"));
     if (!existsSync(filePath)) {
       return new Response("not found", { status: 404, statusText: "Not Found" });
@@ -446,7 +463,7 @@ describe("installSkill", () => {
           const href = typeof url === "string" || url instanceof URL ? String(url) : url.url;
           ok(
             href.startsWith(
-              `https://raw.githubusercontent.com/luckdevx/skillmaxx/v${PACKAGE_VERSION}/`,
+              "https://raw.githubusercontent.com/owner/repo/deadbeef/raw-skill/",
             ),
           );
           return fetchFromRegistry(regDir)(url);
@@ -461,7 +478,7 @@ describe("installSkill", () => {
     ok(
       trace.some((line) =>
         line.includes(
-          `downloaded AGENTS.md from https://raw.githubusercontent.com/luckdevx/skillmaxx/v${PACKAGE_VERSION}/packages/skillmaxx/skills-registry/raw-skill/AGENTS.md`,
+          "downloaded AGENTS.md from https://raw.githubusercontent.com/owner/repo/deadbeef/raw-skill/AGENTS.md",
         ),
       ),
     );
@@ -542,12 +559,12 @@ describe("installSkill", () => {
         fetchImpl: (async (url: string | URL | Request) => {
           const href = typeof url === "string" || url instanceof URL ? String(url) : url.url;
           seenUrls.push(href);
-          if (href.includes(`/luckdevx/skillmaxx/v${PACKAGE_VERSION}/`)) {
+          if (href.includes("owner/repo/deadbeef/fallback-skill/")) {
             return new Response("not found", { status: 404, statusText: "Not Found" });
           }
-          if (href.includes("/luckdevx/skillmaxx/main/packages/skillmaxx/skills-registry/")) {
+          if (href.includes("owner/repo/main/fallback-skill/")) {
             const rel = decodeURIComponent(
-              href.split("/luckdevx/skillmaxx/main/packages/skillmaxx/skills-registry/")[1],
+              href.split("owner/repo/main/")[1],
             );
             return new Response(readFileSync(join(regDir, rel)));
           }
@@ -559,7 +576,7 @@ describe("installSkill", () => {
       ok(
         seenUrls.some((url) =>
           url.startsWith(
-            "https://raw.githubusercontent.com/luckdevx/skillmaxx/main/packages/skillmaxx/skills-registry/fallback-skill/",
+            "https://raw.githubusercontent.com/owner/repo/main/fallback-skill/",
           ),
         ),
       );

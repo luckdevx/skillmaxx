@@ -21,6 +21,7 @@ import { log, write, dim, green, cyan, red, HIDE_CURSOR, SHOW_CURSOR, SPINNER } 
 
 // ── Registry ─────────────────────────────────────────────────
 
+const DEFAULT_REGISTRY_SOURCE = "luckdevx/skillmaxx";
 const DEFAULT_REGISTRY_RAW_BASE_URL_PREFIX = "https://raw.githubusercontent.com/luckdevx/skillmaxx";
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN || "";
 
@@ -188,9 +189,16 @@ function sha256Buffer(buf: Buffer): string {
   return createHash("sha256").update(buf).digest("hex");
 }
 
-function getRegistryRawBaseUrls(opts: InstallOptions): string[] {
+function getRegistryRawBaseUrls(entry: RegistryEntry, opts: InstallOptions): string[] {
   const configured = opts.registryBaseUrl || process.env.SKILLMAXX_REGISTRY_BASE_URL;
   if (configured) return [configured.replace(/\/+$/, "")];
+
+  if (entry.source !== DEFAULT_REGISTRY_SOURCE) {
+    return [
+      `https://raw.githubusercontent.com/${entry.source}/${entry.commitSha}`,
+      `https://raw.githubusercontent.com/${entry.source}/main`,
+    ];
+  }
 
   const version = getPackageVersion();
   if (!version) {
@@ -310,7 +318,7 @@ async function downloadRegistryFile(
 
   const fetchFile = opts.fetchImpl || fetch;
   const errors = [];
-  for (const baseUrl of getRegistryRawBaseUrls(opts)) {
+  for (const baseUrl of getRegistryRawBaseUrls(entry, opts)) {
     const url = `${baseUrl}/${encodeRawPath(skillName, normalizedRel)}`;
     opts.onTrace?.(`GET ${url}`);
     const res = await fetchFile(url, {
