@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.5.0](https://github.com/luckdevx/skillmaxx/releases/tag/v0.5.0) (2026-07-02)
+
+### 🐛 Bug Fixes
+
+- fix: TypeScript compilation errors [`9008177`](https://github.com/luckdevx/skillmaxx/commit/9008177)
+- chore: sync registry skills and fix manifest [`aa46503`](https://github.com/luckdevx/skillmaxx/commit/aa46503)
+
+### 📦 Other Changes
+
+- chore: initial project source [`4f63b1c`](https://github.com/luckdevx/skillmaxx/commit/4f63b1c)
+
 ## [0.4.0] — 2026-07-01 — 🔥 Rebrand: autoskills → skillmaxx
 
 Complete rebrand from autoskills to skillmaxx. All CLI output, env vars, cache paths, URLs, documentation, and internal references updated.
